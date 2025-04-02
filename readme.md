@@ -1,4 +1,4 @@
-# Lord Of The Rings Lukas Mod Cut
+# Lord Of The Rings Lukas Cut
 This script is a cut of LOTR designed for use with Davinci Resolve. 
 ## Instructions for use
 * Copy the script into the following directory:
