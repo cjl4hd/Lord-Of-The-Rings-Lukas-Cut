@@ -9,7 +9,7 @@ This script is a cut of LOTR designed for use with Davinci Resolve. The first Lu
 * Go to the menu Workspace -> Scripts -> Edit -> buildTimeline
 ## Using your generated timeline
 Once you've generated your timeline, you can do whatever you want with it. You can make your own edits, add or remove more scenes, update the movie's color grading. Then you'll want to export the generated cut to a file, choosing your desired quality. More details on this can be found at the Davinci website:
-TODO add link
+(https://www.blackmagicdesign.com/products/davinciresolve/training) and download "Delivering Content".
 
 ## Rules/Definitions for the cut and how to use them
 Each category in the script has a definition to make the cut more objective on what is considered scary, violent, etc. Those definitions are as follows:
