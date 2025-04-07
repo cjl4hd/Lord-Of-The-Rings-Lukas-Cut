@@ -141,7 +141,7 @@ fellowshipCuts = [
     [211695, 212240   ,0,0,0,0,"gandolf looks down, falls to floor"],
     [212241, 212336   ,0,1,0,0,"gandolf falls from bridge"],
     [212336, 217107   ,0,0,0,0,"frodo says no, fellowship sad"],
-    [217108, 217462   ,0,1,0,0,"Elf arrows in the forest"],
+    [217108, 217462   ,0,0,0,0,"Elf arrows in the forest"],
     [217463, 233872   ,0,0,0,0,"caras galathon"],
     [233873, 234633   ,1,1,0,0,"seeing well, fires in hobbiton"],
     [234634, 238719   ,0,0,0,0,"caras galathon"],
@@ -152,7 +152,7 @@ fellowshipCuts = [
     [262463, 262829   ,0,1,0,0,"frodo sees the eye"],
     [262830, 264970   ,0,0,0,0,"frodo aragorn talk"],
     [264971, 279530   ,0,1,1,0,"oracai fight, boromir dies"],
-    [279531, 328271   ,0,1,1,0,"frodo leaves, movie ends"]
+    [279531, 328271   ,0,0,0,0,"frodo leaves, movie ends"]
     
 ]
 
