@@ -1,23 +1,43 @@
 #Running in resolve 18.5
+#Sources for documentation:
+#https://resolvedevdoc.readthedocs.io/en/latest/index.html
+#https://diop.github.io/davinci-resolve-api/#/
+
 
 #If running outside of resolve:
 #from python_get_resolve import GetResolve
 #resolve = GetResolve()
 
-#if running inside of resolve
-#resolve = app()
-
 #object setup
-projectManager = resolve.GetProjectManager()
+projectManager = resolve.GetProjectManager() #resolve is defined when you're running the script inside the program
 current_db = projectManager.GetCurrentDatabase()
 currentProject = projectManager.GetCurrentProject()
 media_pool = currentProject.GetMediaPool()
 root_folder = media_pool.GetRootFolder()
-clip_list = root_folder.GetClipList()       #starting with only single item, the main video
 
-#create timeline
-#If a timeline with this name exists, it will be overwritten
+#CREATE TIMELINES
+#Note: If a timeline with this name exists, it will be overwritten
+#create source timeline if we want to merge audio. This may be common with a surround sound source and free Davinci resolve.
+#You'll want to use ffmpeg or shutter encoder to re-encode the audio to an mp3 or codec of your choice. Merge them back together
+#in your new source timeline.
+media_pool.CreateEmptyTimeline('Source Timeline')
+source_timeline = currentProject.GetCurrentTimeline()
+
 media_pool.CreateEmptyTimeline('New Generated Timeline')
+generated_timeline = currentProject.GetCurrentTimeline()
+
+media_pool.CreateEmptyTimeline('Deleted Scenes Timeline')
+deleted_scenes_timeline = currentProject.GetCurrentTimeline()
+
+#by getting clip list after creating timelines, we get pointers to the timelines we created
+clip_list = root_folder.GetClipList()
+
+#At this time, we expect the media pool to look like the following:
+#media_pool[0] = input video
+#media_pool[1] = input audio (optional)
+#media_pool[2] = source timeline
+#media_pool[3] = generated timeline
+#media_pool[4] = deleted scenes timeline
 
 #load file to media pool if not already there
 
@@ -36,19 +56,23 @@ maxViolence = 0
 #Scary
 #0 = nothing scary
 #4 = very scary
-maxscary = 4
+maxscary = 0
 
 #Orcs
 #0 = no orcs
 #1 = orcs
 #2 = orcs fighting, chasing
-maxOrcs = 2
+maxOrcs = 0
 
 #Nasgul
 #0 = no nasgul
 #1 = nasgul
 #2 = nasgul fighting, chasing
-maxNasgul = 2
+maxNasgul = 0
+
+#Audio remux
+#enable this if you want to add your own audio. Common if you have the free version of Davinci and it doesn't recognize surround
+audioRemux = 1
 
 #Create data structure from switches
 #This is the key component to the build script. Each cut contains data for describing how child friendly it is.
@@ -80,7 +104,7 @@ fellowshipCuts = [
     [82718, 89247   ,0,0,0,0,"hobbits at bree, ends with frodo puting on ring"],
     [89248, 89964   ,0,0,0,0,"black riders, frodo in wraith world"],
     [89965, 91022   ,0,0,0,0,"frodo takes off ring, questioned by srtider"],
-    [91023, 91245   ,1,0,0,0,"hobbits burst in, strider shows sword"],
+    [91023, 91245   ,0,0,0,0,"hobbits burst in, strider shows sword"],
     [91246, 91383   ,0,0,0,0,"hobbits talk to strider"],
     [91384, 93150   ,1,1,0,0,"black riders enter bree"],
     [93151, 99105   ,0,0,0,0,"hobbits wake up in bree, heading towards rivendel"],
@@ -153,10 +177,24 @@ elif movieSelection == 1:
 else:
     selectedCuts = returnofthekingCuts
     
+#Populate source timeline
+#add video
+currentProject.SetCurrentTimeline(source_timeline)
+media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0]}])
+#if necessary, add audio
+if audioRemux == 1:
+    media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[1], "recordFrame": 86400}])#for some reason the timeline starts at hr=1, so appending to the beginning means frame 86400
+    #audiotrack = source_timeline.GetItemListInTrack("audio", 1)
+    #clip = audiotrack[0]
+    #clip.SetProperty("start", 0)
+
 for cuts in selectedCuts:
     if cuts[2] <= maxViolence and cuts[3] <= maxscary and cuts[4] <= maxOrcs and cuts[5] <= maxNasgul:
-        media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0], "startFrame": cuts[0], "endFrame": cuts[1]}])
+        currentProject.SetCurrentTimeline(generated_timeline)
+        media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
     else:
+        currentProject.SetCurrentTimeline(deleted_scenes_timeline)
+        media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
         print("cut \""+cuts[6]+"\" removed at frame "+str(cuts[0]))
 #appends the first clip from root folder, frames 0 to 10, only audio.
 
