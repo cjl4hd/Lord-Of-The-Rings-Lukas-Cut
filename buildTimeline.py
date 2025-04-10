@@ -74,27 +74,36 @@ maxNasgul = 0
 #enable this if you want to add your own audio. Common if you have the free version of Davinci and it doesn't recognize surround
 audioRemux = 1
 
+#Input media version
+#0 = extended 1080p blu-ray
+inputMedia = 0
+
 #Create data structure from switches
 #This is the key component to the build script. Each cut contains data for describing how child friendly it is.
 #From that, you can choose how much you want to remove from the final cut.
 #startFrame, endFrame, violence, scary, orcs, nasgul, notes
 #[0,1000,0-4,0-4,0-2,0-2,"string"]
 fellowshipCuts = [
+    #                Violence
+    #                | Scary
+    #                | | Orcs
+    #                | | | Nasgul
+    #                v v v v
     [0,     2769    ,0,0,0,0,"intro map"],
     [2770,  3260    ,0,1,0,0,"sauron with ring"],
     [3261,  6780    ,1,1,0,0,"shire burning, battle with sauron"],
     [6781,  7847    ,0,1,0,0,"ring with elf"],
     [7848,  8132    ,0,0,0,0,"ring being lost"],
     [8133,  9565    ,0,0,0,0,"golem intro"],
-    [2770,  10720   ,0,0,0,0,"bilbo with golem"],
-    [10720, 46288   ,0,0,0,0,"Shire, frodo, gandolf"],
-    [46288, 47199   ,0,1,0,0,"Minas morgel"],
+    [9566,  10720   ,0,0,0,0,"bilbo with golem"],
+    [10721, 46288   ,0,0,0,0,"Shire, frodo, gandolf"],
+    [46289, 47199   ,0,1,0,0,"Minas morgel"],
     [47200, 49399   ,0,0,0,0,"gandolf goes to minas tirith"],
     [49400, 50151   ,0,1,0,0,"black riders"],
     [50152, 57736   ,0,0,0,0,"hobbiton"],
     [57737, 58022   ,0,1,0,0,"golem torture"],
     [58023, 58171   ,0,0,0,0,"shire,bilbo, but that would lead them here"],
-    [58171, 58297   ,0,1,0,0,"black rider with sword"],
+    [58172, 58297   ,0,1,0,0,"black rider with sword"],
     [58298, 62072   ,0,1,0,0,"take it gandolf, you must; samwise trimming the verge"],
     [62073, 67234   ,0,0,0,0,"frodo sam walking, ends with black horse"],
     [67235, 72517   ,0,0,0,0,"Gandolf visits Saurmon, ends with saurumon waving staff"],
@@ -140,7 +149,7 @@ fellowshipCuts = [
     [210145, 211694   ,1,1,0,0,"gandolf fights balrog"],
     [211695, 212240   ,0,0,0,0,"gandolf looks down, falls to floor"],
     [212241, 212336   ,0,1,0,0,"gandolf falls from bridge"],
-    [212336, 217107   ,0,0,0,0,"frodo says no, fellowship sad"],
+    [212337, 217107   ,0,0,0,0,"frodo says no, fellowship sad"],
     [217108, 217462   ,0,0,0,0,"Elf arrows in the forest"],
     [217463, 233872   ,0,0,0,0,"caras galathon"],
     [233873, 234633   ,1,1,0,0,"seeing well, fires in hobbiton"],
@@ -156,13 +165,44 @@ fellowshipCuts = [
     
 ]
 
-twotowersCuts = []
+twotowersCuts = [
+    #                Violence
+    #                | Scary
+    #                | | Orcs
+    #                | | | Nasgul
+    #                v v v v
+    [0,     2545    ,0,0,0,0,"Mountains pan"],
+    [2546,  5492    ,1,1,0,0,"Gandolf fights balrog"],
+    [5493,  14138    ,0,0,0,0,"Frodo wakes, walking with sam"],
+    [14139,  16060    ,0,1,0,0,"Frodo sam fight golem"],
+    [16061,  21216    ,0,0,0,0,"Frodo sam walk with golem"],
+    [21217,  24612    ,0,0,1,0,"mary pipin with orcs"],
+    [24613,  27717    ,0,0,0,0,"aragorn, gimli, legolas trailing orcs"],
+    [27718,  28968    ,0,0,0,0,"Isenguard fly through 2 towers"],
+    [28969,  31717    ,0,1,0,0,"Orcs cutting trees, builing army"],
+    [31718,  32823    ,0,0,0,0,"Rohan intro, preparnig for attack"],
+    [32824,  33175    ,1,1,0,0,"Orcs attack Rohan"],
+    [33176,  39056    ,0,0,0,0,"Riders of R see orcs, find wounded men, ends with banished"],
+    [39057,  40354    ,0,0,1,0,"Orcs with AGL chasing"],
+    [40355,  44637    ,0,1,1,0,"Orcs with MP"],
+    [44638,  45310    ,1,1,1,0,"Riders find orcs and attack"],
+    [45311,  51439    ,0,0,0,0,"Riders talk with AGL"],
+    [51440,  55086    ,0,1,1,0,"AGL find orc pile"],
+    [55087,  16060    ,0,0,0,0,"MP in fangorn"],
+
+]
 returnofthekingCuts = []
 
 
 #TODO verify data structure
     #each item goes from frame A to at least frame A+1
     #ensure no frames missing, frames in order
+for index,cuts in enumerate(fellowshipCuts):
+    #ensure that cuts[0] < cuts[1]
+    if cuts[0] >= cuts[1]:
+        print("Error! cut \""+cuts[6]+"\" startFrame is greater than endFrame")
+    #ensure that cuts[1] = cuts+1[0] - 1
+    if cuts[1]
 
 #loop through data structure, adding clips
     #“mediaPoolItem”
@@ -180,10 +220,12 @@ else:
 #Populate source timeline
 #add video
 currentProject.SetCurrentTimeline(source_timeline)
-media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0]}])
+media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0], "recordFrame": 86400}])
 #if necessary, add audio
 if audioRemux == 1:
-    media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[1], "recordFrame": 86400}])#for some reason the timeline starts at hr=1, so appending to the beginning means frame 86400
+    #for some reason the timeline starts at hr=1, so appending to the beginning means frame 86400
+    #in our case, we've set both the video and audio to recordFrame=0, that way the timeline frame numbers match the media pool frame numbers
+    media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[1], "recordFrame": 86400}])
     #audiotrack = source_timeline.GetItemListInTrack("audio", 1)
     #clip = audiotrack[0]
     #clip.SetProperty("start", 0)
