@@ -71,7 +71,9 @@ maxOrcs = 0
 maxNasgul = 0
 
 #Audio remux
-#enable this if you want to add your own audio. Common if you have the free version of Davinci and it doesn't recognize surround
+#enable this if you want to add your own audio. Common if your version of LOTR is DTS. 
+#Two ways to get audio are 1) convert to stereo or 2) convert to PWM surround using shutter encoder (ffmpeg)
+#and bring the audio into your media pool. This option will pull the audio back into your cut
 audioRemux = 1
 
 #Input media version
@@ -166,14 +168,14 @@ fellowshipCuts = [
 ]
 
 twotowersCuts = [
-    #                Violence
-    #                | Scary
-    #                | | Orcs
-    #                | | | Nasgul
-    #                v v v v
-    [0,     2545    ,0,0,0,0,"Mountains pan"],
-    [2546,  5492    ,1,1,0,0,"Gandolf fights balrog"],
-    [5493,  14138    ,0,0,0,0,"Frodo wakes, walking with sam"],
+    #                  Violence
+    #                  | Scary
+    #                  | | Orcs
+    #                  | | | Nasgul
+    #                  v v v v
+    [0,      2545     ,0,0,0,0,"Mountains pan"],
+    [2546,   5492     ,1,1,0,0,"Gandolf fights balrog"],
+    [5493,   14138    ,0,0,0,0,"Frodo wakes, walking with sam"],
     [14139,  16060    ,0,1,0,0,"Frodo sam fight golem"],
     [16061,  21216    ,0,0,0,0,"Frodo sam walk with golem"],
     [21217,  24612    ,0,0,1,0,"mary pipin with orcs"],
@@ -188,7 +190,54 @@ twotowersCuts = [
     [44638,  45310    ,1,1,1,0,"Riders find orcs and attack"],
     [45311,  51439    ,0,0,0,0,"Riders talk with AGL"],
     [51440,  55086    ,0,1,1,0,"AGL find orc pile"],
-    [55087,  16060    ,0,0,0,0,"MP in fangorn"],
+    [55087,  60111    ,0,0,1,0,"MP in fangorn, meet treebeard"],
+    [60112,  66923    ,0,0,0,0,"FSG walking"],
+    [66924,  67578    ,0,1,0,0,"Frodo falls into water, sees spirits"],
+    [67579,  73118    ,0,0,0,1,"FSG walking, see nasgul"],
+    [73119,  77578    ,0,0,0,0,"AGL in fangorn, see white wizard"],
+    [77579,  78109    ,1,1,0,0,"Wizard fighting balrog"],
+    [78110,  83900    ,0,0,0,0,"Gandalf in time, returns until task is done, shadowfax"],
+    [83901,  87275    ,0,0,0,0,"MP with treebeard"],
+    [87276,  90347    ,0,0,0,0,"AGLG talking"],
+    [90348,  97964    ,0,0,0,0,"FSG at black gate"],
+    [97965,  104575    ,0,0,0,0,"MP in fangorn"],
+    [104576, 113891    ,0,0,0,0,"AGLG in Rohan"],
+    [113892, 114288    ,1,0,0,0,"AGLG fight with Rohan men and wormtongue"],
+    [114289, 125976    ,0,0,0,0,"Gandalf frees King Theoden"],
+    [125977, 133079    ,0,0,0,0,"Rohan prep to leave for helms deep"],
+    [133080, 135245    ,0,0,0,0,"Saurumon and wormtongue"],
+    [135246, 138656    ,0,0,0,0,"Leaving Rohan"],
+    [138657, 139570    ,0,0,1,0,"Saurumon and wormtongue plotting"],
+    [139571, 150546    ,0,0,0,0,"FSG walking see elephants"],
+    [150547, 152969    ,1,1,0,0,"Faramir's men attack elephants, catch FS"],
+    [152970, 153305    ,0,0,0,0,"Faramir takes FS"],
+    [153306, 165931    ,0,0,0,0,"AGL guide rohan to helms deep"],
+    [165932, 172230    ,1,1,1,0,"Wargs attack rohan people, aragorn falls"],
+    [172231, 178954    ,0,0,0,0,"Rohan people make it to helms deep"],
+    [178955, 181148    ,0,1,1,0,"Saurumon shows wormtongue his army"],
+    [181149, 190627    ,0,0,0,0,"Treebeard walks, aragorn survives, Rivendel"],
+    [190627, 191054    ,0,1,0,0,"Saurumon,orcs march, sauron watches"],
+    [191055, 216364    ,0,0,0,0,"FS taken to Faramir's hideout"],
+    [216365, 224354    ,0,0,0,0,"Aragorn sees army, helms deep prepares"],
+    [224355, 242030    ,0,0,0,0,"Treebeard gathering, helms prep, elves join"],
+    [242031, 248810    ,1,1,0,0,"Battle of Helm's Deep"],
+    [248811, 251137    ,0,0,0,0,"Treebeard too slow"],
+    [251138, 256055    ,1,1,0,0,"Battle of helms"],
+    [256056, 258576    ,0,0,0,0,"Ents decided to do nothing"],
+    [258577, 267267    ,1,1,0,0,"Helms deep"],
+    [257268, 269307    ,0,0,0,0,"Grabeard walking to western forest, changes direction"],
+    [269308, 273725    ,0,0,0,0,"FS taken out of hideout, Treebeard sees trees burnt"],
+    [273726, 276686    ,0,0,0,0,"FS in los giliad"],
+    [276687, 277369    ,0,1,0,1,"Nasgul in los giliad"],
+    [277369, 277971    ,0,0,0,0,"Helms deep fortress gate defense"],
+    [277972, 278010    ,0,1,1,0,"Orcs hit gate"],
+    [278011, 278663    ,0,0,0,0,"Aragorn pep talk"],
+    [278664, 278735    ,0,1,1,0,"Orcs hit gate"],
+    [278736, 279044    ,0,0,0,0,"Women and children make for the mountain pass"],
+    [279045, 279073    ,0,1,1,0,"orcs hit gate"],
+    [279074, 280920    ,0,0,0,0,"Ride out with me, for Rohan"],
+    [280921, 284046    ,0,1,1,0,"orcs hit gate, battle"],
+    [284047, 287555    ,0,0,0,0,"Ents attack Isenguard"],
 
 ]
 returnofthekingCuts = []
