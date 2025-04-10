@@ -193,16 +193,36 @@ twotowersCuts = [
 ]
 returnofthekingCuts = []
 
+#select cuts from file switches
+if movieSelection == 0:
+    selectedCuts = fellowshipCuts
+elif movieSelection == 1:
+    selectedCuts = twotowersCuts
+else:
+    selectedCuts = returnofthekingCuts
 
-#TODO verify data structure
+#Verify data structure
     #each item goes from frame A to at least frame A+1
     #ensure no frames missing, frames in order
-for index,cuts in enumerate(fellowshipCuts):
+prev_item = next_item = None
+l = len(selectedCuts)
+for index,cuts in enumerate(selectedCuts):
+    #set up prev and next
+    if index > 0:
+        prev_item = selectedCuts[index - 1]
+    else:
+        prev_item = None
+    if index < (l - 1):
+        next_item = selectedCuts[index + 1]
+    else:
+        next_item = None
     #ensure that cuts[0] < cuts[1]
     if cuts[0] >= cuts[1]:
-        print("Error! cut \""+cuts[6]+"\" startFrame is greater than endFrame")
+        print("Error! Cut \""+cuts[6]+"\" startFrame is greater than endFrame")
     #ensure that cuts[1] = cuts+1[0] - 1
-    if cuts[1]
+    if next_item != None:
+        if cuts[1] != (next_item[0] - 1):
+            print("Error! Cut \""+cuts[6]+"\" endFrame is not nextCut.startFrame - 1")
 
 #loop through data structure, adding clips
     #“mediaPoolItem”
@@ -210,12 +230,7 @@ for index,cuts in enumerate(fellowshipCuts):
     #“endFrame” (int)
     #(optional) “mediaType” (int; 1 - Video only, 2 - Audio only)
     #media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0], "startFrame": 0, "endFrame": 10, "mediaType": 2}])
-if movieSelection == 0:
-    selectedCuts = fellowshipCuts
-elif movieSelection == 1:
-    selectedCuts = twotowersCuts
-else:
-    selectedCuts = returnofthekingCuts
+
     
 #Populate source timeline
 #add video
