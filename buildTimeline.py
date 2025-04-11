@@ -43,7 +43,7 @@ clip_list = root_folder.GetClipList()
 
 #create switches for building timeline
 #Movieselection = 0 for fellowship, 1 for two towers, 2 for return of the king
-movieSelection = 0
+movieSelection = 1
 
 #Violence
 #0 = no violence
@@ -216,7 +216,7 @@ twotowersCuts = [
     [172231, 178954    ,0,0,0,0,"Rohan people make it to helms deep"],
     [178955, 181148    ,0,1,1,0,"Saurumon shows wormtongue his army"],
     [181149, 190627    ,0,0,0,0,"Treebeard walks, aragorn survives, Rivendel"],
-    [190627, 191054    ,0,1,0,0,"Saurumon,orcs march, sauron watches"],
+    [190628, 191054    ,0,1,0,0,"Saurumon,orcs march, sauron watches"],
     [191055, 216364    ,0,0,0,0,"FS taken to Faramir's hideout"],
     [216365, 224354    ,0,0,0,0,"Aragorn sees army, helms deep prepares"],
     [224355, 242030    ,0,0,0,0,"Treebeard gathering, helms prep, elves join"],
@@ -225,19 +225,26 @@ twotowersCuts = [
     [251138, 256055    ,1,1,0,0,"Battle of helms"],
     [256056, 258576    ,0,0,0,0,"Ents decided to do nothing"],
     [258577, 267267    ,1,1,0,0,"Helms deep"],
-    [257268, 269307    ,0,0,0,0,"Grabeard walking to western forest, changes direction"],
+    [267268, 269307    ,0,0,0,0,"Grabeard walking to western forest, changes direction"],
     [269308, 273725    ,0,0,0,0,"FS taken out of hideout, Treebeard sees trees burnt"],
     [273726, 276686    ,0,0,0,0,"FS in los giliad"],
     [276687, 277369    ,0,1,0,1,"Nasgul in los giliad"],
-    [277369, 277971    ,0,0,0,0,"Helms deep fortress gate defense"],
-    [277972, 278010    ,0,1,1,0,"Orcs hit gate"],
+    [277370, 277971    ,0,0,0,0,"Helms deep fortress gate defense"],
+    [277972, 278010    ,0,1,1,0,"Orcs hit gate 1"],
     [278011, 278663    ,0,0,0,0,"Aragorn pep talk"],
-    [278664, 278735    ,0,1,1,0,"Orcs hit gate"],
+    [278664, 278735    ,0,1,1,0,"Orcs hit gate 2"],
     [278736, 279044    ,0,0,0,0,"Women and children make for the mountain pass"],
-    [279045, 279073    ,0,1,1,0,"orcs hit gate"],
+    [279045, 279073    ,0,1,1,0,"orcs hit gate 3"],
     [279074, 280920    ,0,0,0,0,"Ride out with me, for Rohan"],
     [280921, 284046    ,0,1,1,0,"orcs hit gate, battle"],
     [284047, 287555    ,0,0,0,0,"Ents attack Isenguard"],
+    [287556, 291647    ,1,1,1,1,"Frodo walks to Nasgul, fighting continues"],
+    [291648, 294781    ,0,0,0,0,"Sam narrarates while isenguard falls"],
+    [294782, 294899    ,0,0,1,0,"Orcs retreat to fangorn"],
+    [294900, 295654    ,0,0,0,0,"Aragorn watches orcs die in fangorn"],
+    [295655, 296627    ,0,1,1,0,"Gimli, Legolas clear orc bodies"],
+    [296628, 338660    ,0,0,0,0,"MP take control of Isenguard"],
+
 
 ]
 returnofthekingCuts = []
