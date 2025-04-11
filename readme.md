@@ -1,11 +1,13 @@
 # Lord Of The Rings Lukas Cut
 This script is a cut of LOTR designed for use with Davinci Resolve. The first Lukas Cut release is set to cut frames based on the Blu Ray extended edition, but cuts may be tuned for the theatrical, DVD, or fan cuts in future releases.
 ## Instructions for use
+* Install Davinci Resolve (This script is tested on 18)
 * Copy the script into the following directory:
 > C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Edit\buildTimeline.py 
 * Make script rule changes appropriate for your audience (or just leave it alone)
 * Ensure the script is set for your version of the film (future feature)
 * Add your Lord of the Rings film to the media pool
+* If you have a separate sound track, add to media pool second
 * Go to the menu Workspace -> Scripts -> Edit -> buildTimeline
 ## Using your generated timeline
 Once you've generated your timeline, you can do whatever you want with it. You can make your own edits, add or remove more scenes, update the movie's color grading. Then you'll want to export the generated cut to a file, choosing your desired quality. More details on this can be found at the Davinci website:
