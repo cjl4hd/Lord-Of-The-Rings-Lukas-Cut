@@ -1,5 +1,9 @@
 # Lord Of The Rings Lukas Cut
-This script is a cut of LOTR designed for use with Davinci Resolve. The first Lukas Cut release is set to cut frames based on the Blu Ray 1080p extended edition, but cuts may be tuned for the 4k, theatrical, DVD, or fan cuts in future releases.
+This script creates a cut of the Lord of the Rings trilogy of movies designed for use with Davinci Resolve. The first Lukas Cut release is set to cut frames based on the Blu Ray 1080p extended edition, but cuts may be tuned for the 4k, theatrical, DVD, or fan cuts in future releases.
+### Status
+* Lord of the Rings the Fellowship of the Ring - Rough cut, no transitions
+* Lord of the Rings the Two Towers - First pass cut, no transitions
+* Lord of the Rings the Return of the King - not started
 ## Instructions for use
 * Install Davinci Resolve (This script is tested on 18)
 * Copy the script into the following directory:
