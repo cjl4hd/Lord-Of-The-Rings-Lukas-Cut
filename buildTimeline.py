@@ -247,7 +247,20 @@ twotowersCuts = [
 
 
 ]
-returnofthekingCuts = []
+returnofthekingCuts = [
+    #                  Violence
+    #                  | Scary
+    #                  | | Orcs
+    #                  | | | Nasgul
+    #                  v v v v
+    [0,      5320     ,0,0,0,0,"Intro, smeagul finds ring"],
+    [5321,   6648     ,1,1,0,0,"Smeagul kills friend"],
+    [6649,   9212     ,0,1,0,0,"Smeagul puts on ring, cursed"],
+    [9213,   13458    ,0,0,0,0,"FSG continue journey"],
+    [13459,  21562    ,0,0,0,0,"MP Isenguard met by ALGG"],
+    [21563,  25220    ,0,0,0,0,"Saurumon sends fireball, dies"],
+    
+]
 
 #select cuts from file switches
 if movieSelection == 0:
