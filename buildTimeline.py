@@ -258,7 +258,19 @@ returnofthekingCuts = [
     [6649,   9212     ,0,1,0,0,"Smeagul puts on ring, cursed"],
     [9213,   13458    ,0,0,0,0,"FSG continue journey"],
     [13459,  21562    ,0,0,0,0,"MP Isenguard met by ALGG"],
-    [21563,  25220    ,0,0,0,0,"Saurumon sends fireball, dies"],
+    [21563,  25220    ,1,1,0,0,"Saurumon sends fireball, dies"],
+    [25221,  33205    ,0,0,0,0,"Pippin takes stone, they go to Rohan"],
+    [33206,  38919    ,0,0,0,0,"Gollum monologue, FSG argue"],
+    [38920,  44081    ,0,0,0,0,"Rohan, ALGG MP, Pippin looks at stone"],
+    [44082,  45254    ,0,1,0,0,"Saurumon sees Pippin"],
+    [45255,  53379    ,0,0,0,0,"Gandolf scoops up stone, he and Pippin leave"],
+    [53380,  60484    ,0,0,0,0,"Elves leave, Arowyn rides back"],
+    [60485,  65327    ,0,0,0,0,"GP ride to Minas Tirith"],
+    [65328,  65529    ,1,1,0,0,"Boromir flash back"],
+    [65530,  72373    ,0,0,0,0,"Pippin volunteers service, Galdolf and Pippin talk"],
+    [72374,  75253    ,0,0,0,0,"FSG walking, see head with crown of flowers"],
+    [75254,  78993    ,0,0,0,0,"GP talking about the war"],
+    [78994,  25220    ,0,0,0,0,"Saurumon sends fireball, dies"],
     
 ]
 
