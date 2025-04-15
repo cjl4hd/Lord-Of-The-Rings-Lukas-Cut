@@ -20,6 +20,7 @@ root_folder = media_pool.GetRootFolder()
 #create source timeline if we want to merge audio. This may be common with a surround sound source and free Davinci resolve.
 #You'll want to use ffmpeg or shutter encoder to re-encode the audio to an mp3 or codec of your choice. Merge them back together
 #in your new source timeline.
+#TODO detect existing timelines, if they exist, the generated timeline may fail
 media_pool.CreateEmptyTimeline('Source Timeline')
 source_timeline = currentProject.GetCurrentTimeline()
 
@@ -411,8 +412,9 @@ for cuts in selectedCuts:
         media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
     else:
         currentProject.SetCurrentTimeline(deleted_scenes_timeline)
-        media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
+        newclip = media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
+        #print(newclip[0].GetProperty())
         print("cut \""+cuts[6]+"\" removed at frame "+str(cuts[0]))
 #appends the first clip from root folder, frames 0 to 10, only audio.
 
-print("Successfully generated timeline.")
+print(" ---- Successfully generated timeline ----")
