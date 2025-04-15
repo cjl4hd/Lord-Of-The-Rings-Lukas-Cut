@@ -43,7 +43,7 @@ clip_list = root_folder.GetClipList()
 
 #create switches for building timeline
 #Movieselection = 0 for fellowship, 1 for two towers, 2 for return of the king
-movieSelection = 1
+movieSelection = 2
 
 #Violence
 #0 = no violence
@@ -271,8 +271,8 @@ returnofthekingCuts = [
     [72374,  75253    ,0,0,0,0,"FSG walking, see head with crown of flowers"],
     [75254,  78993    ,0,0,0,0,"GP talking about the war"],
     [78994,  85373    ,0,0,1,1,"Nasgul prep for war, flash back to stabbing frodo, Minas morgul"],
-    [85374,  78993    ,0,0,0,0,"FSG climbing away from Minas Morgul"],
-    [78994,  88421    ,0,0,0,0,"Pippin has a task, Faramir ready to fight"],
+    [85374,  86880    ,0,0,0,0,"FSG climbing away from Minas Morgul"],
+    [86881,  88421    ,0,0,0,0,"Pippin has a task, Faramir ready to fight"],
     [88422,  92767    ,1,1,1,0,"Faramir defends city"],
     [92768,  101544    ,0,0,0,0,"Pippin lights beacon"],
     [101545,  105345    ,1,1,1,1,"Faramir battle"],#TODO split
@@ -326,7 +326,7 @@ returnofthekingCuts = [
     [254024,  255271    ,0,0,0,0,"Pippin finds Mary"],
     [255272,  258134    ,1,1,1,0,"Frodo recovers, lost ring"],
     [258135,  261257    ,1,1,1,0,"Sam saves Frodo"],
-    [225324,  265243    ,0,0,0,0,"Sam shows Frodo the ring"],
+    [261258,  265243    ,0,0,0,0,"Sam shows Frodo the ring"],
     [265244,  269833    ,0,0,0,0,"AGLG head towards black gate"],
     [269834,  271035    ,0,0,0,0,"Faramir and Eowyn hold hands"],
     [271036,  273391    ,0,0,0,0,"Frodo Sam sneak into orc camp "],
@@ -346,7 +346,7 @@ returnofthekingCuts = [
     [310781,  311812    ,0,1,1,1,"Orcs fall into the earth, volcano explodes, Nasgul fall"],
     [311813,  316821    ,0,0,0,0,"FS run from lava, rescued"],
     [316822,  320264    ,0,0,0,0,"Frodo wakes in bed"],
-    [320264,  327932    ,0,0,0,0,"Mina Tirith, Aragorn crowned, wedding"],
+    [320265,  327932    ,0,0,0,0,"Mina Tirith, Aragorn crowned, wedding"],
     [327933,  330642    ,0,0,0,0,"Return to Hobbiton"],
     [330643,  345158    ,0,0,0,0,"Sam wedding, journey to Gray Haven"],
     [345159,  347428    ,0,0,0,0,"Sam and family, end"],
