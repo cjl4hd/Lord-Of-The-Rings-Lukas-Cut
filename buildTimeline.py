@@ -44,7 +44,7 @@ clip_list = root_folder.GetClipList()
 
 #create switches for building timeline
 #Movieselection = 0 for fellowship, 1 for two towers, 2 for return of the king
-movieSelection = 2
+movieSelection = 0
 
 #Violence
 #0 = no violence
@@ -107,7 +107,7 @@ fellowshipCuts = [
     [57737, 58022   ,0,1,0,0,"golem torture"],
     [58023, 58171   ,0,0,0,0,"shire,bilbo, but that would lead them here"],
     [58172, 58297   ,0,1,0,0,"black rider with sword"],
-    [58298, 62072   ,0,1,0,0,"take it gandolf, you must; samwise trimming the verge"],
+    [58298, 62072   ,0,0,0,0,"take it gandolf, you must; samwise trimming the verge"],
     [62073, 67234   ,0,0,0,0,"frodo sam walking, ends with black horse"],
     [67235, 72517   ,0,0,0,0,"Gandolf visits Saurmon, ends with saurumon waving staff"],
     [72518, 73874   ,1,1,0,0,"fandolf sauromn fight"],
@@ -120,7 +120,8 @@ fellowshipCuts = [
     [91246, 91383   ,0,0,0,0,"hobbits talk to strider"],
     [91384, 93150   ,1,1,0,0,"black riders enter bree"],
     [93151, 99105   ,0,0,0,0,"hobbits wake up in bree, heading towards rivendel"],
-    [99106, 100091   ,0,1,1,0,"Sauron introduces orcs"],
+    [99106, 99674   ,0,0,0,0,"Sauron talks with Saurumon"],
+    [99675, 100091   ,0,1,1,0,"Sauron introduces orcs"],
     [100092, 100758  ,0,0,0,0,"gandolf on top of tower"],
     [100759, 101194  ,0,1,1,0,"more orcs cutting trees"],
     [101195, 103126   ,0,0,0,0,"gandolf on tower, ends with hobbits on weathrtop looking down"],
@@ -142,7 +143,8 @@ fellowshipCuts = [
     [169392, 176211   ,0,0,0,0,"walk towards moria, ends with its a tomb"],
     [176212, 178283   ,0,1,0,0,"skeletons, goblins, sea monster"],
     [178284, 192637   ,0,0,0,0,"door crumbles, ends with arrow towards borimir"],
-    [192638, 200317   ,1,1,1,0,"tomb fight, ending with troll dying"],
+    [192638, 193692   ,0,0,0,0,"surrounded in tomb"],#Arrow flies, swords drawn, maybe a bit scary?
+    [193693, 200317   ,1,1,1,0,"tomb fight, ending with troll dying"],
     [200318, 202613   ,0,0,0,0,"checking on Frodo, ends in hall with orcs"],
     [202614, 203371   ,0,1,1,0,"hall of orcs, ending with orcs running"],
     [203372, 206267   ,0,0,0,0,"hear balrog, running to stairs"],
@@ -164,7 +166,8 @@ fellowshipCuts = [
     [262463, 262829   ,0,1,0,0,"frodo sees the eye"],
     [262830, 264970   ,0,0,0,0,"frodo aragorn talk"],
     [264971, 279530   ,0,1,1,0,"oracai fight, boromir dies"],
-    [279531, 328271   ,0,0,0,0,"frodo leaves, movie ends"]
+    [279531, 288595   ,0,0,0,0,"frodo leaves, movie ends"],
+    [288596, 328271   ,0,0,0,0,"credits"],
     
 ]
 
