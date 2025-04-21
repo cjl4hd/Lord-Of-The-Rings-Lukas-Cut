@@ -26,7 +26,7 @@ Each category in the script has a definition to make the cut more objective on w
 * 0 - No scary action or creature that would bother a child. G rated
 * 1 - Something that may cause children to be scared, but may be less mild than a violent scene
 ### Orcs
-* 0 - Minimal or no orcs in the scene. Children are unlikely to be bothered
+* 0 - Minimal or no orcs in the scene. Orcs in the scene are only shown briefly, or at a distance. Children are unlikely to be bothered
 * 1 - Orcs in present in the scene and may scare children
 ### Nasgul
 * 0 - Minimal or no Nasgul. Children are unlikely to be bothered
