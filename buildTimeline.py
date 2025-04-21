@@ -44,7 +44,7 @@ clip_list = root_folder.GetClipList()
 
 #create switches for building timeline
 #Movieselection = 0 for fellowship, 1 for two towers, 2 for return of the king
-movieSelection = 0
+movieSelection = 1
 
 #Violence
 #0 = no violence
@@ -180,7 +180,7 @@ twotowersCuts = [
     [0,      2545     ,0,0,0,0,"Mountains pan"],
     [2546,   5492     ,1,1,0,0,"Gandolf fights balrog"],
     [5493,   14138    ,0,0,0,0,"Frodo wakes, walking with sam"],
-    [14139,  16060    ,0,1,0,0,"Frodo sam fight golem"],
+    [14139,  16060    ,0,1,0,0,"Frodo sam fight golem"],#not very scary
     [16061,  21216    ,0,0,0,0,"Frodo sam walk with golem"],
     [21217,  24612    ,0,0,1,0,"mary pipin with orcs"],
     [24613,  27717    ,0,0,0,0,"aragorn, gimli, legolas trailing orcs"],
@@ -189,15 +189,15 @@ twotowersCuts = [
     [31718,  32823    ,0,0,0,0,"Rohan intro, preparnig for attack"],
     [32824,  33175    ,1,1,0,0,"Orcs attack Rohan"],
     [33176,  39056    ,0,0,0,0,"Riders of R see orcs, find wounded men, ends with banished"],
-    [39057,  40354    ,0,0,1,0,"Orcs with AGL chasing"],
+    [39057,  40354    ,0,0,0,0,"Orcs with AGL chasing"],#orcs brief and far enough in distance to be 0
     [40355,  44637    ,0,1,1,0,"Orcs with MP"],
     [44638,  45310    ,1,1,1,0,"Riders find orcs and attack"],
     [45311,  51439    ,0,0,0,0,"Riders talk with AGL"],
-    [51440,  55086    ,0,1,1,0,"AGL find orc pile"],
-    [55087,  60111    ,0,0,1,0,"MP in fangorn, meet treebeard"],
+    [51440,  55086    ,0,1,1,0,"AGL find orc pile"],#candidate for more detailed cuts to remove orcs
+    [55087,  60111    ,0,0,1,0,"MP in fangorn, meet treebeard"],#orc attacks MP, gets smashed, possible further review
     [60112,  66923    ,0,0,0,0,"FSG walking"],
     [66924,  67578    ,0,1,0,0,"Frodo falls into water, sees spirits"],
-    [67579,  73118    ,0,0,0,1,"FSG walking, see nasgul"],
+    [67579,  73118    ,0,0,0,1,"FSG walking, see nasgul"],#candidate for more detailed cuts. Nasgul flashback
     [73119,  77578    ,0,0,0,0,"AGL in fangorn, see white wizard"],
     [77579,  78109    ,1,1,0,0,"Wizard fighting balrog"],
     [78110,  83900    ,0,0,0,0,"Gandalf in time, returns until task is done, shadowfax"],
@@ -206,7 +206,7 @@ twotowersCuts = [
     [90348,  97964    ,0,0,0,0,"FSG at black gate"],
     [97965,  104575   ,0,0,0,0,"MP in fangorn"],
     [104576, 113891   ,0,0,0,0,"AGLG in Rohan"],
-    [113892, 114288   ,1,0,0,0,"AGLG fight with Rohan men and wormtongue"],
+    [113892, 114288   ,1,0,0,0,"AGLG fight with Rohan men and wormtongue"],#candidate for PG (keep 1)
     [114289, 125976   ,0,0,0,0,"Gandalf frees King Theoden"],
     [125977, 133079   ,0,0,0,0,"Rohan prep to leave for helms deep"],
     [133080, 135245   ,0,0,0,0,"Saurumon and wormtongue"],
@@ -220,15 +220,15 @@ twotowersCuts = [
     [172231, 178954   ,0,0,0,0,"Rohan people make it to helms deep"],
     [178955, 181148   ,0,1,1,0,"Saurumon shows wormtongue his army"],
     [181149, 190627   ,0,0,0,0,"Treebeard walks, aragorn survives, Rivendel"],
-    [190628, 191054   ,0,1,0,0,"Saurumon,orcs march, sauron watches"],
+    [190628, 191054   ,0,1,1,0,"Saurumon,orcs march, sauron watches"],
     [191055, 216364   ,0,0,0,0,"FS taken to Faramir's hideout"],
     [216365, 224354   ,0,0,0,0,"Aragorn sees army, helms deep prepares"],
     [224355, 242030   ,0,0,0,0,"Treebeard gathering, helms prep, elves join"],
-    [242031, 248810   ,1,1,0,0,"Battle of Helm's Deep"],
+    [242031, 248810   ,2,1,1,0,"Battle of Helm's Deep"],
     [248811, 251137   ,0,0,0,0,"Treebeard too slow"],
-    [251138, 256055   ,1,1,0,0,"Battle of helms"],
+    [251138, 256055   ,2,1,0,0,"Battle of helms"],
     [256056, 258576   ,0,0,0,0,"Ents decided to do nothing"],
-    [258577, 267267   ,1,1,0,0,"Helms deep"],
+    [258577, 267267   ,2,1,0,0,"Helms deep, falling back to keep"],
     [267268, 269307   ,0,0,0,0,"Grabeard walking to western forest, changes direction"],
     [269308, 273725   ,0,0,0,0,"FS taken out of hideout, Treebeard sees trees burnt"],
     [273726, 276686   ,0,0,0,0,"FS in los giliad"],
@@ -240,7 +240,7 @@ twotowersCuts = [
     [278736, 279044   ,0,0,0,0,"Women and children make for the mountain pass"],
     [279045, 279073   ,0,1,1,0,"orcs hit gate 3"],
     [279074, 280920   ,0,0,0,0,"Ride out with me, for Rohan"],
-    [280921, 284046   ,0,1,1,0,"orcs hit gate, battle"],
+    [280921, 284046   ,2,1,1,0,"orcs hit gate, battle"],
     [284047, 287555   ,0,0,0,0,"Ents attack Isenguard"],
     [287556, 291647   ,1,1,1,1,"Frodo walks to Nasgul, fighting continues"],
     [291648, 294781   ,0,0,0,0,"Sam narrarates while isenguard falls"],
