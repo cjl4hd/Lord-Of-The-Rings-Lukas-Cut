@@ -188,7 +188,7 @@ twotowersCuts = [
     [28969,  31717    ,0,1,0,0,"Orcs cutting trees, builing army"],
     [31718,  32823    ,0,0,0,0,"Rohan intro, preparnig for attack"],
     [32824,  33175    ,1,1,0,0,"Orcs attack Rohan"],
-    [33176,  39056    ,0,0,0,0,"Riders of R see orcs, find wounded men, ends with banished"],
+    [33176,  39056    ,0,0,0,0,"Riders of R see orcs, find wounded men, ends with banished"],#Candidate for detailed cuts. Parts are scary from close ups of dead bodies
     [39057,  40354    ,0,0,0,0,"Orcs with AGL chasing"],#orcs brief and far enough in distance to be 0
     [40355,  44637    ,0,1,1,0,"Orcs with MP"],
     [44638,  45310    ,1,1,1,0,"Riders find orcs and attack"],
@@ -217,13 +217,13 @@ twotowersCuts = [
     [152970, 153305   ,0,0,0,0,"Faramir takes FS"],
     [153306, 165931   ,0,0,0,0,"AGL guide rohan to helms deep"],
     [165932, 172230   ,1,1,1,0,"Wargs attack rohan people, aragorn falls"],
-    [172231, 178954   ,0,0,0,0,"Rohan people make it to helms deep"],
+    [172231, 178954   ,0,0,0,0,"Rohan people make it to helms deep"],#Candidate for detailed cuts. Orc dies while saying Aragorn fell
     [178955, 181148   ,0,1,1,0,"Saurumon shows wormtongue his army"],
     [181149, 190627   ,0,0,0,0,"Treebeard walks, aragorn survives, Rivendel"],
     [190628, 191054   ,0,1,1,0,"Saurumon,orcs march, sauron watches"],
     [191055, 216364   ,0,0,0,0,"FS taken to Faramir's hideout"],
-    [216365, 224354   ,0,0,0,0,"Aragorn sees army, helms deep prepares"],
-    [224355, 242030   ,0,0,0,0,"Treebeard gathering, helms prep, elves join"],
+    [216365, 224354   ,0,0,0,0,"Aragorn sees army, helms deep prepares"],#START HERE
+    [224355, 242030   ,0,0,0,0,"Treebeard gathering, helms prep, elves join"],#brief orcs marching at a distance
     [242031, 248810   ,2,1,1,0,"Battle of Helm's Deep"],
     [248811, 251137   ,0,0,0,0,"Treebeard too slow"],
     [251138, 256055   ,2,1,0,0,"Battle of helms"],
@@ -241,14 +241,14 @@ twotowersCuts = [
     [279045, 279073   ,0,1,1,0,"orcs hit gate 3"],
     [279074, 280920   ,0,0,0,0,"Ride out with me, for Rohan"],
     [280921, 284046   ,2,1,1,0,"orcs hit gate, battle"],
-    [284047, 287555   ,0,0,0,0,"Ents attack Isenguard"],
+    [284047, 287555   ,0,0,0,0,"Ents attack Isenguard"],#Candidate for detailed cuts. Orcs visible, but small. Getting crushed
     [287556, 291647   ,1,1,1,1,"Frodo walks to Nasgul, fighting continues"],
     [291648, 294781   ,0,0,0,0,"Sam narrarates while isenguard falls"],
     [294782, 294899   ,0,0,1,0,"Orcs retreat to fangorn"],
     [294900, 295654   ,0,0,0,0,"Aragorn watches orcs die in fangorn"],
     [295655, 296627   ,0,1,1,0,"Gimli, Legolas clear orc bodies"],
-    [296628, 338660   ,0,0,0,0,"MP take control of Isenguard"],
-
+    [296628, 309063   ,0,0,0,0,"MP take control of Isenguard"],
+    [309064, 338660   ,0,0,0,0,"Credits"],
 
 ]
 returnofthekingCuts = [
@@ -420,4 +420,5 @@ for cuts in selectedCuts:
         print("cut \""+cuts[6]+"\" removed at frame "+str(cuts[0]))
 #appends the first clip from root folder, frames 0 to 10, only audio.
 
+#TODO: print length of each timeline, total, and whether they match
 print(" ---- Successfully generated timeline ----")
