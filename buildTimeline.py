@@ -2,11 +2,23 @@
 #Sources for documentation:
 #https://resolvedevdoc.readthedocs.io/en/latest/index.html
 #https://diop.github.io/davinci-resolve-api/#/
+#Fusion scripting:
+#https://www.steakunderwater.com/wesuckless/viewtopic.php?t=4851
+#https://documents.blackmagicdesign.com/UserManuals/Fusion8_Scripting_Guide.pdf
 
 
 #If running outside of resolve:
 #from python_get_resolve import GetResolve
 #resolve = GetResolve()
+
+#Lets us simulate keypresses, this allows for transitions
+import keyboard
+import time
+
+#Experiment with resolve structure:
+#print(dir(app))
+#Go through itemsin resolve data structure:
+#print(dir(resolve.GetProjectManager().GetCurrentProject().GetCurrentTimeline().GetCurrentVideoItem().GetDuration()))
 
 #object setup
 projectManager = resolve.GetProjectManager() #resolve is defined when you're running the script inside the program
@@ -14,6 +26,8 @@ current_db = projectManager.GetCurrentDatabase()
 currentProject = projectManager.GetCurrentProject()
 media_pool = currentProject.GetMediaPool()
 root_folder = media_pool.GetRootFolder()
+
+#TODO print info for GetName for the above objects to be Verbose
 
 #CREATE TIMELINES
 #Note: If a timeline with this name exists, it will be overwritten
@@ -44,7 +58,7 @@ clip_list = root_folder.GetClipList()
 
 #create switches for building timeline
 #Movieselection = 0 for fellowship, 1 for two towers, 2 for return of the king
-movieSelection = 1
+movieSelection = 0
 
 #Violence
 #0 = no violence
@@ -96,78 +110,78 @@ fellowshipCuts = [
     [2770,  3260      ,0,1,0,0,"Sauron with ring"],
     [3261,  6780      ,1,1,0,0,"Shire burning, battle with Sauron"],
     [6781,  7847      ,0,1,0,0,"ring with elf"],
-    [7848,  8132      ,0,0,0,0,"ring being lost"],
+    [7848,  8132      ,0,0,0,0,"ring being lost"],#ACF at beginning
     [8133,  9565      ,0,0,0,0,"Gollum intro"],
-    [9566,  10720     ,0,0,0,0,"Bilbo with Gollum"],
-    [10721, 46288     ,0,0,0,0,"Shire, Frodo, Gandalf"],
-    [46289, 47199     ,0,1,0,0,"Minas Morgul"],
-    [47200, 49399     ,0,0,0,0,"Gandalf goes to Minas Tirith"],
-    [49400, 50151     ,0,1,0,0,"black riders"],
-    [50152, 57736     ,0,0,0,0,"Hobbiton"],
-    [57737, 58022     ,0,1,0,0,"Gollum torture"],
-    [58023, 58171     ,0,0,0,0,"Shire, Bilbo, but that would lead them here"],
-    [58172, 58297     ,0,1,0,0,"black rider with sword"],
-    [58298, 62072     ,0,0,0,0,"take it Gandalf, you must; Samwise trimming the verge"],
-    [62073, 67234     ,0,0,0,0,"Frodo Sam walking, ends with black horse"],
-    [67235, 72517     ,0,0,0,0,"Gandalf visits Saruman, ends with Saruman waving staff"],
-    [72518, 73874     ,1,1,0,0,"Gandolf Saruman fight"],
-    [73875, 77510     ,0,0,0,0,"Merry Pippin join, ends with hobbits under tree"],
-    [77511, 82717     ,0,1,0,0,"black rider above tree, ends at ferry"],
-    [82718, 89247     ,0,0,0,0,"hobbits at Bree, ends with Frodo puting on ring"],
-    [89248, 89964     ,0,0,0,0,"black riders, Frodo in wraith world"],
-    [89965, 91022     ,0,0,0,0,"Frodo takes off ring, questioned by Strider"],
-    [91023, 91245     ,0,0,0,0,"hobbits burst in, Strider shows sword"],
-    [91246, 91383     ,0,0,0,0,"hobbits talk to Strider"],
-    [91384, 93150     ,1,1,0,0,"black riders enter Bree"],
-    [93151, 99105     ,0,0,0,0,"hobbits wake up in Bree, heading towards Rivendell"],
-    [99106, 99674     ,0,0,0,0,"Sauron talks with Saruman"],
-    [99675, 100091    ,0,1,1,0,"Saruman introduces orcs"],
-    [100092, 100758   ,0,0,0,0,"Gandalf on top of tower"],
-    [100759, 101194   ,0,1,1,0,"more orcs cutting trees"],
-    [101195, 103126   ,0,0,0,0,"Gandalf on tower, ends with hobbits on Weathertop looking down"],
-    [103127, 107512   ,1,1,0,0,"weathertop fight scene"],
-    [107513, 108259   ,0,0,0,0,"Frodo in pain, Strider carrying him"],
-    [108260, 108939   ,0,0,0,0,"Isenguard fly through"],
-    [108940, 109929   ,0,0,0,0,"Moth flys to Gandalf"],
-    [109930, 111885   ,0,0,1,0,"Isenguard fly through, orc army"],
-    [111886, 115943   ,0,0,0,0,"stone trolls, Frodo struggles"],
-    [115944, 119952   ,0,1,0,0,"Galadriel with black riders, ends with them swept away"],
-    [119953, 122529   ,0,0,0,0,"Rivendell, ends with i was delayed"],
-    [122530, 123051   ,1,1,0,0,"Saruman and Gandalf fight again"],
-    [123052, 123796   ,0,0,0,0,"Gandalf flys away"],
-    [123797, 132201   ,0,0,0,0,"Rivendell, ends with Elrond telling story"],
-    [132202, 133432   ,0,0,0,0,"Sauron finger cut, Isildur says no"],#Shows sword cutting finger, but not much is seen.
-    [133433, 159637   ,0,0,0,0,"Rivendell, fellowship trek"],
-    [159638, 164472   ,0,0,0,0,"fellowship eating, practicing swords, ravens, hiking into the mountains"],
-    [164473, 169391   ,0,0,0,0,"Isengaurd fly through, mountain ice fall"],
-    [169392, 176211   ,0,0,0,0,"walk towards Moria, ends with its a tomb"],
-    [176212, 178283   ,0,1,0,0,"skeletons, goblins, sea monster"],
-    [178284, 192637   ,0,0,0,0,"door crumbles, ends with arrow towards Boromir"],
-    [192638, 193692   ,0,0,0,0,"surrounded in tomb"],#Arrow flies, swords drawn, maybe a bit scary?
-    [193693, 200317   ,1,1,1,0,"tomb fight, ending with troll dying"],
-    [200318, 202613   ,0,0,0,0,"checking on Frodo, ends in hall with orcs"],
-    [202614, 203371   ,0,1,1,0,"hall of orcs, ending with orcs running"],
-    [203372, 206267   ,0,0,0,0,"hear balrog, running to stairs"],
-    [206268, 209317   ,1,1,1,0,"running from orcs to balrog battle"],
-    [209318, 209749   ,0,1,0,0,"running from balrog"],
-    [209750, 210144   ,0,0,0,0,"crossing bridge"],
-    [210145, 211694   ,1,1,0,0,"Gandalf fights balrog"],
-    [211695, 212240   ,0,0,0,0,"Gandalf looks down, falls to floor"],
-    [212241, 212336   ,0,1,0,0,"Gandalf falls from bridge"],
-    [212337, 217107   ,0,0,0,0,"Frodo says no, fellowship sad"],
-    [217108, 217462   ,0,0,0,0,"Elf arrows in the forest"],
-    [217463, 233872   ,0,0,0,0,"Caras Galadhon 1"],
-    [233873, 234633   ,1,1,0,0,"seeing well, fires in Hobbiton"],
-    [234634, 238719   ,0,0,0,0,"Caras Galadhon 2"],
-    [238720, 241122   ,0,1,1,0,"Isengaurd"],
-    [241123, 249909   ,0,0,0,0,"leaving Caras Galadhon"],
-    [249910, 250859   ,0,1,1,0,"Uruk-hai chasing"],
-    [250860, 262462   ,0,0,0,0,"fellowship boats, landing, Boromir and Frodo"],
-    [262463, 262829   ,0,1,0,0,"Frodo sees the eye"],
-    [262830, 264970   ,0,0,0,0,"Frodo Aragorn talk"],
-    [264971, 279530   ,0,1,1,0,"Uruk-hai fight, boromir dies"],
-    [279531, 288595   ,0,0,0,0,"Frodo leaves, movie ends"],
-    [288596, 328271   ,0,0,0,0,"Credits"],
+    #[9566,  10720     ,0,0,0,0,"Bilbo with Gollum"],
+    #[10721, 46288     ,0,0,0,0,"Shire, Frodo, Gandalf"],
+    #[46289, 47199     ,0,1,0,0,"Minas Morgul"],
+    #[47200, 49399     ,0,0,0,0,"Gandalf goes to Minas Tirith"],
+    #[49400, 50151     ,0,1,0,0,"black riders"],
+    #[50152, 57736     ,0,0,0,0,"Hobbiton"],
+    #[57737, 58022     ,0,1,0,0,"Gollum torture"],
+    #[58023, 58171     ,0,0,0,0,"Shire, Bilbo, but that would lead them here"],
+    #[58172, 58297     ,0,1,0,0,"black rider with sword"],
+    #[58298, 62072     ,0,0,0,0,"take it Gandalf, you must; Samwise trimming the verge"],
+    #[62073, 67234     ,0,0,0,0,"Frodo Sam walking, ends with black horse"],
+    #[67235, 72517     ,0,0,0,0,"Gandalf visits Saruman, ends with Saruman waving staff"],
+    #[72518, 73874     ,1,1,0,0,"Gandolf Saruman fight"],
+    #[73875, 77510     ,0,0,0,0,"Merry Pippin join, ends with hobbits under tree"],
+    #[77511, 82717     ,0,1,0,0,"black rider above tree, ends at ferry"],
+    #[82718, 89247     ,0,0,0,0,"hobbits at Bree, ends with Frodo puting on ring"],
+    #[89248, 89964     ,0,0,0,0,"black riders, Frodo in wraith world"],
+    #[89965, 91022     ,0,0,0,0,"Frodo takes off ring, questioned by Strider"],
+    #[91023, 91245     ,0,0,0,0,"hobbits burst in, Strider shows sword"],
+    #[91246, 91383     ,0,0,0,0,"hobbits talk to Strider"],
+    #[91384, 93150     ,1,1,0,0,"black riders enter Bree"],
+    #[93151, 99105     ,0,0,0,0,"hobbits wake up in Bree, heading towards Rivendell"],
+    #[99106, 99674     ,0,0,0,0,"Sauron talks with Saruman"],
+    #[99675, 100091    ,0,1,1,0,"Saruman introduces orcs"],
+    #[100092, 100758   ,0,0,0,0,"Gandalf on top of tower"],
+    #[100759, 101194   ,0,1,1,0,"more orcs cutting trees"],
+    #[101195, 103126   ,0,0,0,0,"Gandalf on tower, ends with hobbits on Weathertop looking down"],
+    #[103127, 107512   ,1,1,0,0,"weathertop fight scene"],
+    #[107513, 108259   ,0,0,0,0,"Frodo in pain, Strider carrying him"],
+    #[108260, 108939   ,0,0,0,0,"Isenguard fly through"],
+    #[108940, 109929   ,0,0,0,0,"Moth flys to Gandalf"],
+    #[109930, 111885   ,0,0,1,0,"Isenguard fly through, orc army"],
+    #[111886, 115943   ,0,0,0,0,"stone trolls, Frodo struggles"],
+    #[115944, 119952   ,0,1,0,0,"Galadriel with black riders, ends with them swept away"],
+    #[119953, 122529   ,0,0,0,0,"Rivendell, ends with i was delayed"],
+    #[122530, 123051   ,1,1,0,0,"Saruman and Gandalf fight again"],
+    #[123052, 123796   ,0,0,0,0,"Gandalf flys away"],
+    #[123797, 132201   ,0,0,0,0,"Rivendell, ends with Elrond telling story"],
+    #[132202, 133432   ,0,0,0,0,"Sauron finger cut, Isildur says no"],#Shows sword cutting finger, but not much is seen.
+    #[133433, 159637   ,0,0,0,0,"Rivendell, fellowship trek"],
+    #[159638, 164472   ,0,0,0,0,"fellowship eating, practicing swords, ravens, hiking into the mountains"],
+    #[164473, 169391   ,0,0,0,0,"Isengaurd fly through, mountain ice fall"],
+    #[169392, 176211   ,0,0,0,0,"walk towards Moria, ends with its a tomb"],
+    #[176212, 178283   ,0,1,0,0,"skeletons, goblins, sea monster"],
+    #[178284, 192637   ,0,0,0,0,"door crumbles, ends with arrow towards Boromir"],
+    #[192638, 193692   ,0,0,0,0,"surrounded in tomb"],#Arrow flies, swords drawn, maybe a bit scary?
+    #[193693, 200317   ,1,1,1,0,"tomb fight, ending with troll dying"],
+    #[200318, 202613   ,0,0,0,0,"checking on Frodo, ends in hall with orcs"],
+    #[202614, 203371   ,0,1,1,0,"hall of orcs, ending with orcs running"],
+    #[203372, 206267   ,0,0,0,0,"hear balrog, running to stairs"],
+    #[206268, 209317   ,1,1,1,0,"running from orcs to balrog battle"],
+    #[209318, 209749   ,0,1,0,0,"running from balrog"],
+    #[209750, 210144   ,0,0,0,0,"crossing bridge"],
+    #[210145, 211694   ,1,1,0,0,"Gandalf fights balrog"],
+    #[211695, 212240   ,0,0,0,0,"Gandalf looks down, falls to floor"],
+    #[212241, 212336   ,0,1,0,0,"Gandalf falls from bridge"],
+    #[212337, 217107   ,0,0,0,0,"Frodo says no, fellowship sad"],
+    #[217108, 217462   ,0,0,0,0,"Elf arrows in the forest"],
+    #[217463, 233872   ,0,0,0,0,"Caras Galadhon 1"],
+    #[233873, 234633   ,1,1,0,0,"seeing well, fires in Hobbiton"],
+    #[234634, 238719   ,0,0,0,0,"Caras Galadhon 2"],
+    #[238720, 241122   ,0,1,1,0,"Isengaurd"],
+    #[241123, 249909   ,0,0,0,0,"leaving Caras Galadhon"],
+    #[249910, 250859   ,0,1,1,0,"Uruk-hai chasing"],
+    #[250860, 262462   ,0,0,0,0,"fellowship boats, landing, Boromir and Frodo"],
+    #[262463, 262829   ,0,1,0,0,"Frodo sees the eye"],
+    #[262830, 264970   ,0,0,0,0,"Frodo Aragorn talk"],
+    #[264971, 279530   ,0,1,1,0,"Uruk-hai fight, boromir dies"],
+    #[279531, 288595   ,0,0,0,0,"Frodo leaves, movie ends"],
+    #[288596, 328271   ,0,0,0,0,"Credits"],
     
 ]
 
@@ -412,7 +426,16 @@ if audioRemux == 1:
 for cuts in selectedCuts:
     if cuts[2] <= maxViolence and cuts[3] <= maxscary and cuts[4] <= maxOrcs and cuts[5] <= maxNasgul:
         currentProject.SetCurrentTimeline(generated_timeline)
-        media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
+        newclip = media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
+        #print(dir(newclip[0]))
+        #newclip[0].SetClipEnabled(1)
+        #experiment with adding transitions
+        #keyboard.send('up')
+        #keyboard.send('v') #V selects nearest edit point, this creates a transition that spans the clips
+        #keyboard.send('shift+v') #select clip
+        #keyboard.send("shift+t")
+        #keyboard.send('esc')
+        #time.sleep(0.1)
     else:
         currentProject.SetCurrentTimeline(deleted_scenes_timeline)
         newclip = media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
@@ -422,3 +445,20 @@ for cuts in selectedCuts:
 
 #TODO: print length of each timeline, total, and whether they match
 print(" ---- Successfully generated timeline ----")
+
+#Exploring adding transitions to timeline
+#Shift-T on keyboard will add an audio only transition to the selected clip
+#We can create keystrokes, however this requires selecting clips. Not sure how easy this will be to do
+#Shift+V selects clip at playhead, Shift+T adds the default transition
+#If we look at the clip inspector, we can see the transition has been added. Looking for an equivalent in Python
+#keyboard.press_and_release('shift+t')
+
+#Exploring auto-render
+#From https://documents.blackmagicdesign.com/UserManuals/Fusion8_Scripting_Guide.pdf
+# Adds the current composition as new job
+# and print all RenderJobs in Queue.
+#qm = fusion.RenderManager
+#qm.AddJob(comp.GetAttrs()[“COMPS_FileName”])
+#joblist = qm.GetJobList().values()
+#for job in joblist:
+#print(job.GetAttrs()[“RJOBS_Name”])
