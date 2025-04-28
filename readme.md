@@ -20,8 +20,9 @@ Once you've generated your timeline, you can do whatever you want with it. You c
 ## Rules/Definitions for the cut and how to use them
 Each category in the script has a definition to make the cut more objective on what is considered scary, violent, etc. Those definitions are as follows:
 ### Violence
-* 0 - No violence, this cut is G rated. Swords can be seen, but not used
-* 1 - There is fighting, either with swords, or bare hands
+* Level 0 (None to Mild): Scenes with little to no violence, such as peaceful dialogues or non-threatening environments. Swords can be seen, but not used
+* Level 1 (Moderate): Scenes with some action or peril, including minor battles or threats.
+* Level 2 (Intense): Scenes with graphic violence, intense battles, or significant peril.
 ### Scary
 * 0 - No scary action or creature that would bother a child. G rated
 * 1 - Something that may cause children to be scared, but may be less mild than a violent scene
