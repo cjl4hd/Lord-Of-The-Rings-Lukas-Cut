@@ -17,6 +17,9 @@
 import keyboard
 import time
 
+#Lets us notify when the script is finished
+import winsound
+
 #Experiment with resolve structure:
 #print(dir(app))
 #Go through itemsin resolve data structure:
@@ -60,7 +63,10 @@ clip_list = root_folder.GetClipList()
 
 #create switches for building timeline
 #Movieselection = 0 for fellowship, 1 for two towers, 2 for return of the king
-movieSelection = 2
+movieSelection = 1
+
+#create deleted scenes for review
+deleted_scenes = 1
 
 #Violence
 #0 = no violence
@@ -102,6 +108,9 @@ inputMedia = 0
 #The edit point tells us whether a transition will be placed before, between, or after a cut
 editPointStatus = 0
 
+#verbose mode prints more info
+verbose = 1
+
 #Create data structure from switches
 #This is the key component to the build script. Each cut contains data for describing how child friendly it is.
 #From that, you can choose how much you want to remove from the final cut.
@@ -126,13 +135,13 @@ fellowshipCuts = [
     [49400, 50151     ,0,1,0,0,[1,-1],"black riders"],
     [50152, 57736     ,0,0,0,0,[0,0],"Hobbiton"],
     [57737, 58022     ,0,1,0,0,[0,0],"Gollum torture"],
-    [58023, 58171     ,0,0,0,0,[0,0],"Shire, Bilbo, but that would lead them here"],
+    [58023, 58171     ,0,0,0,0,[1,-1],"Shire, Bilbo, but that would lead them here"],
     [58172, 58297     ,0,1,0,0,[0,0],"black rider with sword"],
-    [58298, 62072     ,0,0,0,0,[0,0],"take it Gandalf, you must; Samwise trimming the verge"],
+    [58298, 62072     ,0,0,0,0,[1,0],"take it Gandalf, you must; Samwise trimming the verge"],
     [62073, 67234     ,0,0,0,0,[0,0],"Frodo Sam walking, ends with black horse"],
     [67235, 72517     ,0,0,0,0,[0,0],"Gandalf visits Saruman, ends with Saruman waving staff"],
     [72518, 73874     ,1,1,0,0,[0,0],"Gandolf Saruman fight"],
-    [73875, 77510     ,0,0,0,0,[0,0],"Merry Pippin join, ends with hobbits under tree"],
+    [73875, 77510     ,0,0,0,0,[1,1],"Merry Pippin join, ends with hobbits under tree"],
     [77511, 82717     ,0,1,0,0,[0,0],"black rider above tree, ends at ferry"],
     [82718, 89247     ,0,0,0,0,[0,0],"hobbits at Bree, ends with Frodo puting on ring"],
     [89248, 89964     ,0,0,0,0,[0,0],"black riders, Frodo in wraith world"],
@@ -143,7 +152,7 @@ fellowshipCuts = [
     [93151, 99105     ,0,0,0,0,[0,0],"hobbits wake up in Bree, heading towards Rivendell"],
     [99106, 99674     ,0,0,0,0,[0,0],"Sauron talks with Saruman"],
     [99675, 100091    ,0,1,1,0,[0,0],"Saruman introduces orcs"],
-    [100092, 100758   ,0,0,0,0,[0,0],"Gandalf on top of tower"],
+    [100092, 100758   ,0,0,0,0,[1,0],"Gandalf on top of tower"],
     [100759, 101194   ,0,1,1,0,[0,0],"more orcs cutting trees"],
     [101195, 103126   ,0,0,0,0,[0,0],"Gandalf on tower, ends with hobbits on Weathertop looking down"],
     [103127, 107512   ,1,1,0,0,[0,0],"weathertop fight scene"],
@@ -158,7 +167,7 @@ fellowshipCuts = [
     [123052, 123796   ,0,0,0,0,[0,0],"Gandalf flys away"],
     [123797, 132201   ,0,0,0,0,[0,0],"Rivendell, ends with Elrond telling story"],
     [132202, 133432   ,0,0,0,0,[0,0],"Sauron finger cut, Isildur says no"],#Shows sword cutting finger, but not much is seen.
-    [133433, 159637   ,0,0,0,0,[0,0],"Rivendell, fellowship trek"],
+    [133433, 159637   ,0,0,0,0,[0,0],"Rivendell, fellowship trek"],#possibly scary Bilbo at 155175
     [159638, 164472   ,0,0,0,0,[0,0],"fellowship eating, practicing swords, ravens, hiking into the mountains"],
     [164473, 169391   ,0,0,0,0,[0,0],"Isengaurd fly through, mountain ice fall"],
     [169392, 176211   ,0,0,0,0,[0,0],"walk towards Moria, ends with its a tomb"],
@@ -209,16 +218,32 @@ twotowersCuts = [
     [28969,  31717    ,0,1,0,0,[0,0],"Orcs cutting trees, builing army"],
     [31718,  32823    ,0,0,0,0,[0,0],"Rohan intro, preparnig for attack"],
     [32824,  33175    ,1,1,0,0,[0,0],"Orcs attack Rohan"],
-    [33176,  39056    ,0,0,0,0,[0,0],"Riders of Rohan see orcs, find wounded men, ends with banished"],#Candidate for detailed cuts. Parts are scary from close ups of dead bodies
+    [33176,  33600    ,0,0,0,0,[0,0],"Riders of Rohan see orcs"],##candidate for more detailed cuts
+    [33601,  34275    ,0,1,0,0,[0,0],"Searching bodies"],
+    [34276,  39056    ,0,0,0,0,[0,0],"Find Theodred alive, ends with banished"],
     [39057,  40354    ,0,0,0,0,[0,0],"Orcs with AGL chasing"],#orcs brief and far enough in distance to be 0
     [40355,  44637    ,0,1,1,0,[0,0],"Orcs with MP"],
     [44638,  45310    ,1,1,1,0,[0,0],"Riders find orcs and attack"],
-    [45311,  51439    ,0,0,0,0,[0,0],"Riders talk with AGL"],
-    [51440,  55086    ,0,1,1,0,[0,0],"AGL find orc pile"],#candidate for more detailed cuts to remove orcs
-    [55087,  60111    ,0,0,1,0,[0,0],"MP in fangorn, meet treebeard"],#orc attacks MP, gets smashed, possible further review
+    [45311,  51439    ,0,0,0,0,[1,1],"Riders talk with AGL"],
+    [51440,  51907    ,0,1,1,0,[0,0],"AGL find orc pile"],
+    [51908,  54332    ,0,0,0,0,[0,0],"Gimli finds sheath, Aragorn starts tracking"],
+    [54333,  54361    ,0,1,1,0,[0,0],"orc grabs hobbit"],
+    [54362,  54406    ,0,0,0,0,[0,0],"belt removed"],
+    [54407,  54496    ,0,1,1,0,[0,0],"Orc drops belt"],
+    [54497,  55086    ,0,0,0,0,[0,0],"Hobbits run into forest"],
+    [55087,  55509    ,0,0,0,0,[0,0],"MP in fangorn"],
+    [55510,  55852    ,0,0,1,0,[0,0],"Orc finds MP"],
+    [55853,  56457    ,0,0,0,0,[0,0],"MP continue running"],
+    [56458,  56597    ,0,1,1,0,[0,0],"Orc Attacks Marry"],
+    [56598,  56935    ,0,0,0,0,[1,0],"Pippin meets treebeard"],
+    [56936,  57203    ,1,1,1,0,[0,0],"Treebeard smashing orc"],
+    [57204,  60111    ,0,0,0,0,[1,0],"Treebeard holding, talking to MP"],
     [60112,  66923    ,0,0,0,0,[0,0],"FSG walking"],
     [66924,  67578    ,0,1,0,0,[0,0],"Frodo falls into water, sees spirits"],
-    [67579,  73118    ,0,0,0,1,[0,0],"FSG walking, see nasgul"],#candidate for more detailed cuts. Nasgul flashback
+    [67579,  70940    ,0,0,0,0,[0,0],"FSG walking, Frodo sees flashback"],
+    [70941,  70987    ,1,1,0,1,[0,0],"Flashback to Nasgul stabbing Frodo in wraith world"],
+    [70988,  72116    ,0,1,0,1,[0,0],"FSG see nasgul"],
+    [72117,  73118    ,0,0,0,0,[0,0],"FSG hide under bushes"],#Nasgul far away, not scary or recognizable
     [73119,  77578    ,0,0,0,0,[0,0],"AGL in fangorn, see white wizard"],
     [77579,  78109    ,1,1,0,0,[0,0],"Gandalf fighting balrog"],
     [78110,  83900    ,0,0,0,0,[0,0],"Gandalf in time, returns until task is done, shadowfax"],
@@ -227,7 +252,7 @@ twotowersCuts = [
     [90348,  97964    ,0,0,0,0,[0,0],"FSG at black gate"],
     [97965,  104575   ,0,0,0,0,[0,0],"MP in fangorn"],
     [104576, 113891   ,0,0,0,0,[0,0],"AGLG in Rohan"],
-    [113892, 114288   ,1,0,0,0,[0,0],"AGLG fight with Rohan men and Wormtongue"],#candidate for PG (keep 1)
+    [113892, 114288   ,1,0,0,0,[0,0],"AGLG fight with Rohan men and Wormtongue"],
     [114289, 125976   ,0,0,0,0,[0,0],"Gandalf frees King Theoden"],
     [125977, 133079   ,0,0,0,0,[0,0],"Rohan prep to leave for Helm's Deep"],
     [133080, 135245   ,0,0,0,0,[0,0],"Saruman and Wormtongue"],
@@ -238,13 +263,17 @@ twotowersCuts = [
     [152970, 153305   ,0,0,0,0,[0,0],"Faramir takes FS"],
     [153306, 165931   ,0,0,0,0,[0,0],"AGL guide rohan to Helm's Deep"],
     [165932, 172230   ,1,1,1,0,[0,0],"Wargs attack rohan people, Aragorn falls"],
-    [172231, 178954   ,0,0,0,0,[0,0],"Rohan people make it to Helm's Deep"],#Candidate for detailed cuts. Orc dies while saying Aragorn fell
+    [172231, 172396   ,0,0,0,0,[1,-1],"Rohan people looking through the dead"],
+    [172397, 172520   ,0,1,0,0,[0,0],"Pan through blood, dead horse"],
+    [172521, 172695   ,0,0,0,0,[1,-1],"Gimli says Aragorn?"],
+    [172696, 173582   ,0,1,1,0,[0,0],"Talk with orc"],
+    [173583, 178954   ,0,0,0,0,[1,-1],"Look over cliff, Rohan people make it to Helm's Deep"],
     [178955, 181148   ,0,1,1,0,[0,0],"Saruman shows Wormtongue his army"],
     [181149, 190627   ,0,0,0,0,[0,0],"Treebeard walks, Aragorn survives, Rivendell"],
     [190628, 191054   ,0,1,1,0,[0,0],"Saruman, orcs march, Sauron watches"],
     [191055, 216364   ,0,0,0,0,[0,0],"FS taken to Faramir's hideout"],
-    [216365, 224354   ,0,0,0,0,[0,0],"Aragorn sees army, Helm's Deep prepares"],#START HERE
-    [224355, 242030   ,0,0,0,0,[0,0],"Treebeard gathering, Helm's prep, elves join"],#brief orcs marching at a distance
+    [216365, 224354   ,0,0,0,0,[0,0],"Aragorn sees army, Helm's Deep prepares"],
+    [224355, 242030   ,0,0,0,0,[0,0],"Treebeard gathering, Helm's prep, elves join"],
     [242031, 248810   ,2,1,1,0,[0,0],"Battle of Helm's Deep"],
     [248811, 251137   ,0,0,0,0,[0,0],"Treebeard too slow"],
     [251138, 256055   ,2,1,0,0,[0,0],"Battle of Helm's"],
@@ -262,8 +291,13 @@ twotowersCuts = [
     [279045, 279073   ,0,1,1,0,[0,0],"orcs hit gate 3"],
     [279074, 280920   ,0,0,0,0,[0,0],"Ride out with me, for Rohan"],
     [280921, 284046   ,2,1,1,0,[0,0],"orcs hit gate, battle"],
-    [284047, 287555   ,0,0,0,0,[0,0],"Ents attack Isenguard"],#Candidate for detailed cuts. Orcs visible, but small. Getting crushed
-    [287556, 291647   ,1,1,1,1,[0,0],"Frodo walks to Nasgul, fighting continues"],
+    [284047, 284172   ,0,0,0,0,[1,1],"Ents attack Isenguard"],
+    [284173, 284826   ,2,1,1,0,[0,0],"Orcs smashed by rocks"],
+    [284827, 285221   ,0,0,0,0,[1,1],"Saruman sees destruction 1"],#possible violence, but small orcs at a distance
+    [285222, 285386   ,1,1,1,0,[0,0],"Ent smashes orcs together"],
+    [285387, 287555   ,0,0,0,0,[1,0],"Saruman sees destruction 2"],
+    [287556, 289980   ,1,1,1,1,[0,0],"Frodo walks to Nasgul, fighting continues"],
+    [289981, 291647   ,0,0,0,0,[1,1],"Sam monologue begins"],#some orcs but very short
     [291648, 294781   ,0,0,0,0,[0,0],"Sam narrarates while Isenguard falls"],
     [294782, 294899   ,0,0,1,0,[0,0],"Orcs retreat to Fangorn"],
     [294900, 295654   ,0,0,0,0,[0,0],"Aragorn watches orcs die in Fangorn"],
@@ -383,39 +417,82 @@ returnofthekingCuts = [
 #select cuts from file switches
 if movieSelection == 0:
     selectedCuts = fellowshipCuts
+    print(" ---- Generating Fellowship cut ----")
 elif movieSelection == 1:
     selectedCuts = twotowersCuts
+    print(" ---- Generating Two Towers cut ----")
 else:
     selectedCuts = returnofthekingCuts
-
+    print(" ---- Generating Return of the King cut ----")
+print(" ---- Warning: Console must be closed while script runs!!! ----")
 #Functions used in this script
 
-#Move the edit point to the desired place, returns 0 on success
+#Move the edit point to the desired place
 def setEditPoint(newPoint):
     global editPointStatus
-    print(f"start point: {editPointStatus}, end point: {newPoint}")
+    verbose = 0
+    if verbose:
+        print(f"start point: {editPointStatus}, end point: {newPoint}")
     loopCount = 0
-    while (editPointStatus != newPoint and loopCount<3):
+    while ((editPointStatus != newPoint) and loopCount<3):
         loopCount = loopCount + 1
+        print(f"{editPointStatus != newPoint}")
         if loopCount == 3:
             print("Error: setEditPoint failure")
             print(editPointStatus)
             print(newPoint)
         keyboard.send("u")
-        time.sleep(0.1)
+        time.sleep(0.5)
         if editPointStatus == 0:
             editPointStatus = 1
-            print(editPointStatus)
-            break
-        if editPointStatus == 1:
+            if verbose:
+                print(f"editPointStatus: {editPointStatus}, newPoint: {newPoint}, loopCount: {loopCount}")
+            #break
+        elif editPointStatus == 1:
             editPointStatus = -1
-            print(editPointStatus)
-            break
-        if editPointStatus == -1:
+            if verbose:
+                print(f"editPointStatus: {editPointStatus}, newPoint: {newPoint}, loopCount: {loopCount}")
+            #break
+        elif editPointStatus == -1:
             editPointStatus = 0
-            print(editPointStatus)
-            break
-    print("Done with setEditPoint()")
+            if verbose:
+                print(f"editPointStatus: {editPointStatus}, newPoint: {newPoint}, loopCount: {loopCount}")
+            #break
+
+    if verbose:
+        print("Done with setEditPoint()")
+
+def addAudioTransition():
+    global generated_timeline
+    timecode = generated_timeline.GetCurrentTimecode()
+    if verbose:
+        print(f"start timecode: {timecode}")
+    #we can use SetCurrentTimecode() if we can convert a frame to timecode,
+    #otherwise we set playhead to end and do our insertion from there
+    sleep_time = 0.5
+    #so lets go back one cut
+    time.sleep(sleep_time)
+    keyboard.send('ctrl+4')#focus on timeline
+    time.sleep(sleep_time)
+    keyboard.send('end')
+    time.sleep(sleep_time)
+    if verbose:
+        print(f"end timecode: {timecode}")
+    keyboard.send('up')
+    time.sleep(sleep_time)
+    if verbose:
+        print(f"UP timecode: {timecode}")
+    #select nearest edit point
+    keyboard.send('v')
+    time.sleep(sleep_time)
+    if verbose:
+        print(f"start timecode: {timecode}")
+    setEditPoint(cuts[6][1])
+    time.sleep(sleep_time)
+    keyboard.send("shift+t")
+    #Stop selection?
+    keyboard.send('end')
+    time.sleep(sleep_time)
 
 #Verify data structure
     #each item goes from frame A to at least frame A+1
@@ -434,11 +511,11 @@ for index,cuts in enumerate(selectedCuts):
         next_item = None
     #ensure that cuts[0] < cuts[1]
     if cuts[0] >= cuts[1]:
-        print("Error! Cut \""+cuts[6]+"\" startFrame is greater than endFrame")
+        print("Error! Cut \""+cuts[7]+"\" startFrame is greater than endFrame")
     #ensure that cuts[1] = cuts+1[0] - 1
     if next_item != None:
         if cuts[1] != (next_item[0] - 1):
-            print("Error! Cut \""+cuts[6]+"\" endFrame is not nextCut.startFrame - 1")
+            print("Error! Cut \""+cuts[7]+"\" endFrame is not nextCut.startFrame - 1")
 
 #loop through data structure, adding clips
     #“mediaPoolItem”
@@ -466,42 +543,16 @@ for cuts in selectedCuts:
         currentProject.SetCurrentTimeline(generated_timeline)
         newclip = media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
         if cuts[6][0] == 1:
-            #append to timeline puts the editor at the end,
-            #so lets go back one cut
-            keyboard.send('up')
-            time.sleep(0.1)
-            #select nearest edit point
-            keyboard.send('v')
-            setEditPoint(cuts[6][1])
-            #if cuts[6][1] == 0:
-            #    keyboard.send("shift+t")
-            #    keyboard.send('esc')
-            #if cuts[6][1] == 1:
-            #    keyboard.send("u")
-            #if cuts[6][1] == -1:
-            #    keyboard.send("u")
-            #    time.sleep(0.1)
-            #    keyboard.send("u")
-            #    time.sleep(0.1)
-            #Add an audio transition only
-            keyboard.send("shift+t")
-            #Stop selection?
-            keyboard.send('esc')
-            time.sleep(0.1)
-        #print(dir(newclip[0]))
-        #newclip[0].SetClipEnabled(1)
-        #experiment with adding transitions
-        #keyboard.send('up')
-        #keyboard.send('v') #V selects nearest edit point, this creates a transition that spans the clips
-        #keyboard.send('u') #edit point type. Toggles side or aligned center
-        #keyboard.send('shift+v') #select clip
-        #keyboard.send("shift+t")
-        #keyboard.send('esc')
-        #time.sleep(0.1)
+            timecode = generated_timeline.GetCurrentTimecode()
+            print(f"start timecode: {timecode}")
+            #TODO: fix problem where audio transition is not placing in the right spot
+            #This is likely due to the playhead not staying at the end of the clip while
+            #we switch timelines. For some reason END is not sending the playhead to the end
+            addAudioTransition()
         #Order goes center, right, left, repeats
         #When DR is loaded, it starts on center
         #we'll need to make a state machine to track state
-    else:
+    elif deleted_scenes:
         currentProject.SetCurrentTimeline(deleted_scenes_timeline)
         newclip = media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
         #print(newclip[0].GetProperty())
@@ -509,8 +560,10 @@ for cuts in selectedCuts:
 #appends the first clip from root folder, frames 0 to 10, only audio.
 
 #TODO: print length of each timeline, total, and whether they match
+#reset edit point in case we run the script again later
+setEditPoint(0)
 print(" ---- Successfully generated timeline ----")
-
+winsound.MessageBeep()
 #Exploring adding transitions to timeline
 #Shift-T on keyboard will add an audio only transition to the selected clip
 #We can create keystrokes, however this requires selecting clips. Not sure how easy this will be to do
@@ -520,7 +573,14 @@ print(" ---- Successfully generated timeline ----")
 #Notes about transition data structure:
 #transitions are always done relative to the beginning of a clip
 #Data structure is [a,b] where a is True,false, and b is -1=end of prev clip,0=mid,1=beginning of current clip
-
+        #experiment with adding transitions
+        #keyboard.send('up')
+        #keyboard.send('v') #V selects nearest edit point, this creates a transition that spans the clips
+        #keyboard.send('u') #edit point type. Toggles side or aligned center
+        #keyboard.send('shift+v') #select clip
+        #keyboard.send("shift+t")
+        #keyboard.send('esc')
+        #time.sleep(sleep_time)
 
 #Exploring auto-render
 #From https://documents.blackmagicdesign.com/UserManuals/Fusion8_Scripting_Guide.pdf
