@@ -63,7 +63,7 @@ clip_list = root_folder.GetClipList()
 
 #create switches for building timeline
 #Movieselection = 0 for fellowship, 1 for two towers, 2 for return of the king
-movieSelection = 1
+movieSelection = 2
 
 #create deleted scenes for review
 deleted_scenes = 1
@@ -336,8 +336,10 @@ returnofthekingCuts = [
     [86881,  88421    ,0,0,0,0,[0,0],"Pippin has a task, Faramir ready to fight"],
     [88422,  92767    ,1,1,1,0,[0,0],"Faramir defends city"],
     [92768,  101544   ,0,0,0,0,[0,0],"Pippin lights beacon"],
-    [101545,  105345  ,1,1,1,1,[0,0],"Faramir battle"],#TODO split
-    [105346,  111294  ,0,0,0,0,[0,0],"Gandalf enables escape from Osgiliath"],
+    [101545,  104738  ,1,1,1,1,[0,0],"Faramir battle 1"],
+    [104739,  104985  ,0,0,0,0,[1,1],"GP ride towards battle"],
+    [104986,  105345  ,1,1,1,1,[0,0],"Faramir battle 2"],
+    [105346,  111294  ,0,0,0,0,[1,1],"Gandalf enables escape from Osgiliath"],
     [111295,  114167  ,0,0,0,0,[0,0],"FSG continue climb"],
     [114168,  114727  ,0,0,1,1,[0,0],"Nasgul,Orcs in Osgiliath"],
     [114728,  120572  ,0,0,0,0,[0,0],"GP in Minas Tirith"],
@@ -350,7 +352,7 @@ returnofthekingCuts = [
     [153864,  157383  ,0,0,0,0,[0,0],"AGL go into the mountain"],
     [157384,  159410  ,0,0,0,0,[0,0],"Gondor rides light and swift"],
     [159411,  159918  ,0,0,0,0,[0,0],"Orcs prep to attack Minas Tirith"],
-    [159919,  169273  ,0,1,0,0,[0,0],"AGL find the king to fulfil his oath"],#candidate for detailed cuts
+    [159919,  169273  ,0,1,0,0,[0,0],"AGL find the king to fulfil his oath"],#entire scene has skulls and ghosts, so its likely scary for children
     [169274,  170694  ,0,1,0,0,[0,0],"King fulfills oath"],
     [170695,  183539  ,0,1,0,0,[0,0],"Wounded Faramir returns, battle of Minas Tirith begins"],
     [183540,  184992  ,0,1,0,0,[0,0],"AGL take ships"],
@@ -368,15 +370,15 @@ returnofthekingCuts = [
     [210878,  212657  ,0,0,0,0,[0,0],"Sam with Frodo paralyzed"],
     [212658,  214180  ,0,1,1,0,[0,0],"Orcs find Frodo"],
     [214181,  219368  ,1,1,1,1,[0,0],"Faramir alive,Pippin finds Gandalf, attacked by Nasgul"],
-    [219369,  220474  ,0,0,0,0,[0,0],"Gondor joins"],
+    [219369,  220474  ,0,0,0,0,[1,-1],"Gondor joins"],
     [220475,  220710  ,0,0,1,0,[0,0],"Orcs prep to fight 1"],
-    [220711,  221683  ,0,0,0,0,[0,0],"Theoden pep talk"],
+    [220711,  221683  ,0,0,0,0,[1,1],"Theoden pep talk"],
     [221684,  221750  ,0,0,1,0,[0,0],"Orcs prep to fight 2"],
-    [221751,  223504  ,0,0,0,0,[0,0],"Merry ready to ride"],
+    [221751,  223504  ,0,0,0,0,[1,0],"Merry ready to ride"],
     [223505,  223601  ,0,0,1,0,[0,0],"Orcs prep bows"],
-    [223602,  223912  ,0,0,0,0,[0,0],"Gondor rides"],
+    [223602,  223912  ,0,0,0,0,[1,0],"Gondor rides"],#not a great transition
     [223913,  225323  ,1,1,1,0,[0,0],"Gondor Fight begins"],
-    [225324,  227962  ,0,0,0,0,[0,0],"Denethor lights Faramir"],
+    [225324,  227962  ,0,0,0,0,[1,-1],"Denethor lights Faramir"],#not a great transition
     [227963,  228370  ,0,1,0,0,[0,0],"Denethor burns"],
     [228371,  237624  ,1,1,1,0,[0,0],"Battle continues with elephants"],
     [237625,  240118  ,1,1,1,1,[0,0],"Nasgul attacks King Theoden"],
@@ -390,8 +392,11 @@ returnofthekingCuts = [
     [261258,  265243  ,0,0,0,0,[0,0],"Sam shows Frodo the ring"],
     [265244,  269833  ,0,0,0,0,[0,0],"AGLG head towards black gate"],
     [269834,  271035  ,0,0,0,0,[0,0],"Faramir and Eowyn hold hands"],
-    [271036,  273391  ,0,0,0,0,[0,0],"Frodo Sam sneak into orc camp "],#candidate for detailed cut
-    [273392,  279360  ,0,1,1,0,[0,0],"AGLG ride, FS start fight, escape"],#candidate for detailed cuts
+    [271036,  272216  ,0,0,0,0,[0,0],"Frodo Sam sneak into orc camp 1"],#candidate for detailed cut
+    [272217,  273391  ,0,1,1,0,[0,0],"Orcs yell at FS"],
+    [273392,  273667  ,0,0,0,0,[1,1],"AGLG ride"],#candidate for detailed cuts
+    [273668,  275925  ,0,1,1,0,[0,0],"FS start fight with orcs"],
+    [275926,  279360  ,0,0,0,0,[1,-1],"FS escape orcs"],#video transition cross dissolve example at 276295
     [279361,  284495  ,0,0,0,0,[0,0],"AGLG ride to gate, FS out of water, meet mouth of Sauron"],
     [284496,  286753  ,0,0,0,0,[0,0],"Talk to Mouth about Frodo"],#might be scary, but somewhat important plot
     [286754,  287075  ,1,1,0,0,[0,0],"Mouth head cut off, concludes negotiations"],
@@ -469,24 +474,27 @@ def addAudioTransition():
         print(f"start timecode: {timecode}")
     #we can use SetCurrentTimecode() if we can convert a frame to timecode,
     #otherwise we set playhead to end and do our insertion from there
-    sleep_time = 0.5
+    #sleep time gives davinci resolve time to do the action before beginning the next
+    #0.1 seems to work well. May need to be higher on low end pc
+    #TODO: make keypress and sleep into a single function
+    sleep_time = 0.2
     #so lets go back one cut
     time.sleep(sleep_time)
     keyboard.send('ctrl+4')#focus on timeline
     time.sleep(sleep_time)
     keyboard.send('end')
     time.sleep(sleep_time)
-    if verbose:
-        print(f"end timecode: {timecode}")
+    #if verbose:
+    #    print(f"end timecode: {timecode}")
     keyboard.send('up')
     time.sleep(sleep_time)
-    if verbose:
-        print(f"UP timecode: {timecode}")
+    #if verbose:
+    #    print(f"UP timecode: {timecode}")
     #select nearest edit point
     keyboard.send('v')
     time.sleep(sleep_time)
-    if verbose:
-        print(f"start timecode: {timecode}")
+    #if verbose:
+    #    print(f"start timecode: {timecode}")
     setEditPoint(cuts[6][1])
     time.sleep(sleep_time)
     keyboard.send("shift+t")
