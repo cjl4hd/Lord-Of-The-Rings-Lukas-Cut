@@ -23,6 +23,7 @@ Davinci Resolve's decoder doesn't like specific settings on H264 files. I'm curr
 | closed gop | When enabled, forces each GOP (Group of Pictures) to be self-contained, meaning no B-frames reference frames from the previous GOP. Disabling this may cause issues with Resolve     |
 | keyint    | Sets the maximum interval between I-frames (in number of frames). A typical value is 250. Setting this to twice keyint-min may improve stability.   |
 | keyint-min    | Sets the minimum interval between I-frames. A typical value is 25.    |
+
 There are also helpful settings to tune for your use case that shouldn't impact Davinci Resolve's ability to decode, but are helpful to know, also for encoding later:
 | Setting    | Description |
 | -------- | ------- |
