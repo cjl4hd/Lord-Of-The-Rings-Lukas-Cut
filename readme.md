@@ -17,12 +17,18 @@ This script creates a cut of the Lord of the Rings trilogy of movies designed fo
 Depending on where you get your digital copy of Lord of the Rings, it will have different encode settings and different codecs. Davinci Resolve can be picky about H264 inputs, so you may have to re-encode using better settings for import. If you're looking for a high quality output, Handbrake settings RF20 veryslow with all filters off has worked pretty well making a more compatible file without visible quality loss. When using Davinci Resolve Delivery for export, the ideal case is to add a x264 plugin to render the RF setting you want directly, as the x264 codec is more efficient than the H264 encoder in resolve. The challenge is that the x264 plugin is only given as source code, and if you're not familiar with Visual Studio, compiling may be challenging. Luckily there is a [Github repo](https://github.com/gdaswani/x264_encoder) that smooths this out. If using the resolve encoder, you likely want to export Best, as the others have visible quality loss. From there you can re-encode with Handbrake to RF 21 or 22 without much loss. This setup of many steps of re-encoding to get around Davinci Resolve limitations is not ideal, so getting a high quality input with compatible encoding and installing the plugin will both improve the efficiency and quality of your workflow.
 ### Detailed encode settings
 Davinci Resolve's decoder doesn't like specific settings on H264 files. I'm currently looking into this, but there are a few things I've learned. If I'm in Handbrake 1.8.2 and use the default settings while changing RF and speed only, Davinci Resolve takes the output well. Possible problematic encoding settings are:
-| Setting    | Description |
+| Problematic Setting    | Description |
 | -------- | ------- |
 | bframes  | Specifies how many B-frames (bi-directionally predicted frames) can be used between I-frames and P-frames. 3 is a common value, and setting it higher than this may cause Resolve to struggle    |
 | closed gop | When enabled, forces each GOP (Group of Pictures) to be self-contained, meaning no B-frames reference frames from the previous GOP. Disabling this may cause issues with Resolve     |
 | keyint    | Sets the maximum interval between I-frames (in number of frames). A typical value is 250. Setting this to twice keyint-min may improve stability.   |
 | keyint-min    | Sets the minimum interval between I-frames. A typical value is 25.    |
+There are also helpful settings to tune for your use case that shouldn't impact Davinci Resolve's ability to decode, but are helpful to know, also for encoding later:
+| Setting    | Description |
+| -------- | ------- |
+| preset | Controls speed vs. compression efficiency trade-off. Use the slowest setting you have the patience for, as it will produce better results  |
+| tune | Tune allows you to optimize the encoder for specific content, for example for film, preserving grain, simpler decode, or zero latency for streaming |
+| crf | Constant Rate Factor manages the quality of your result. Lower is higher efficiency but takes longer. For 1080p, Handbrake recommends 20-24 |
 ## Using your generated timeline
 Once you've generated your timeline, you can do whatever you want with it. You can make your own edits, add or remove more scenes, update the movie's color grading. Then you'll want to export the generated cut to a file, choosing your desired quality. More details on this can be found at the Davinci website:
 (https://www.blackmagicdesign.com/products/davinciresolve/training) and download "Delivering Content".
