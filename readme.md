@@ -30,6 +30,9 @@ There are also helpful settings to tune for your use case that shouldn't impact 
 | preset | Controls speed vs. compression efficiency trade-off. Use the slowest setting you have the patience for, as it will produce better results  |
 | tune | Tune allows you to optimize the encoder for specific content, for example for film, preserving grain, simpler decode, or zero latency for streaming |
 | crf | Constant Rate Factor manages the quality of your result. Lower is higher efficiency but takes longer. For 1080p, Handbrake recommends 20-24 |
+
+### Errors in the flow
+Even when I run with H264 codec settings that look compatible, I get the following error "The clip could not be decoded correctly. Please check if the clip is still available on the drive." at the end of the encode process. My best guess is that the end of file is not how Davinci Resolve expects, and so throws an error. This doesn't seem to be a problem, as Davinci Resolve has already encoded the entire film to the file.
 ## Using your generated timeline
 Once you've generated your timeline, you can do whatever you want with it. You can make your own edits, add or remove more scenes, update the movie's color grading. Then you'll want to export the generated cut to a file, choosing your desired quality. More details on this can be found at the Davinci website:
 (https://www.blackmagicdesign.com/products/davinciresolve/training) and download "Delivering Content".
