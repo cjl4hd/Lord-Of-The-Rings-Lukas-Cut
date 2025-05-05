@@ -4,7 +4,7 @@ This script creates a cut of the Lord of the Rings trilogy of movies designed fo
 * Lord of the Rings the Fellowship of the Ring - Rough cut, no transitions
 * Lord of the Rings the Two Towers - Rough cut, no transitions
 * Lord of the Rings the Return of the King - Rough cut, no transitions
-## Instructions for use
+## High Level Instructions for use
 * Install Davinci Resolve (This script is tested on 18)
 * Copy the script into the following directory:
 > C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Edit\buildTimeline.py 
@@ -13,6 +13,16 @@ This script creates a cut of the Lord of the Rings trilogy of movies designed fo
 * Add your Lord of the Rings film to the media pool
 * If you have a separate sound track, add to media pool second
 * Go to the menu Workspace -> Scripts -> Edit -> buildTimeline
+## Detailed Workflow
+Depending on where you get your digital copy of Lord of the Rings, it will have different encode settings and different codecs. Davinci Resolve can be picky about H264 inputs, so you may have to re-encode using better settings for import. If you're looking for a high quality output, Handbrake settings RF20 veryslow with all filters off has worked pretty well making a more compatible file without visible quality loss. When using Davinci Resolve Delivery for export, the ideal case is to add a x264 plugin to render the RF setting you want directly, as the x264 codec is more efficient than the H264 encoder in resolve. The challenge is that the x264 plugin is only given as source code, and if you're not familiar with Visual Studio, compiling may be challenging. Luckily there is a [Github repo](https://github.com/gdaswani/x264_encoder) that smooths this out. If using the resolve encoder, you likely want to export Best, as the others have visible quality loss. From there you can re-encode with Handbrake to RF 21 or 22 without much loss. This setup of many steps of re-encoding to get around Davinci Resolve limitations is not ideal, so getting a high quality input with compatible encoding and installing the plugin will both improve the efficiency and quality of your workflow.
+### Detailed encode settings
+Davinci Resolve's decoder doesn't like specific settings on H264 files. I'm currently looking into this, but there are a few things I've learned. If I'm in Handbrake 1.8.2 and use the default settings while changing RF and speed only, Davinci Resolve takes the output well. Possible problematic encoding settings are:
+| Setting    | Description |
+| -------- | ------- |
+| bframes  | Specifies how many B-frames (bi-directionally predicted frames) can be used between I-frames and P-frames. 3 is a common value, and setting it higher than this may cause Resolve to struggle    |
+| closed gop | When enabled, forces each GOP (Group of Pictures) to be self-contained, meaning no B-frames reference frames from the previous GOP. Disabling this may cause issues with Resolve     |
+| keyint    | Sets the maximum interval between I-frames (in number of frames). A typical value is 250. Setting this to twice keyint-min may improve stability.   |
+| keyint-min    | Sets the minimum interval between I-frames. A typical value is 25.    |
 ## Using your generated timeline
 Once you've generated your timeline, you can do whatever you want with it. You can make your own edits, add or remove more scenes, update the movie's color grading. Then you'll want to export the generated cut to a file, choosing your desired quality. More details on this can be found at the Davinci website:
 (https://www.blackmagicdesign.com/products/davinciresolve/training) and download "Delivering Content".
