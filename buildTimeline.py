@@ -7,6 +7,11 @@
 #https://documents.blackmagicdesign.com/UserManuals/Fusion8_Scripting_Guide.pdf
 #keyboard shortcuts:
 #https://indiefilming.com/tutorials/keyboard-shortcuts-davinci-resolve
+#x264 plugin: 
+#BM Forum
+#https://forum.blackmagicdesign.com/viewtopic.php?f=21&t=125570&hilit=Sergey+Mirontsev&start=100
+#Github
+#https://github.com/gdaswani/x264_encoder
 
 
 #If running outside of resolve:
@@ -52,7 +57,7 @@ deleted_scenes_timeline = currentProject.GetCurrentTimeline()
 #by getting clip list after creating timelines, we get pointers to the timelines we created
 clip_list = root_folder.GetClipList()
 
-#At this time, we expect the media pool to look like the following:
+#At this point in the code, we expect the media pool to look like the following:
 #media_pool[0] = input video
 #media_pool[1] = input audio (optional)
 #media_pool[2] = source timeline
@@ -63,7 +68,7 @@ clip_list = root_folder.GetClipList()
 
 #create switches for building timeline
 #Movieselection = 0 for fellowship, 1 for two towers, 2 for return of the king
-movieSelection = 2
+movieSelection = 0
 
 #create deleted scenes for review
 deleted_scenes = 0
@@ -100,15 +105,22 @@ maxNasgul = 0
 audioRemux = 1
 
 #Input media version
-#0 = extended 1080p blu-ray
+#0 = extended 1080p blu-ray, removed frames for intermission (single disk)
+#1 = extended 1080p blu-ray, 2 disk version
 inputMedia = 0
+
+######################################################
+# NO NEED TO EDIT BEYOND HERE FOR BASIC CUT GENERATION
+######################################################
 
 #Edit point status
 #used for tracking the state of the edit point
 #The edit point tells us whether a transition will be placed before, between, or after a cut
 editPointStatus = 0
 
-#verbose mode prints more info
+#verbose mode prints more info and debug
+#verbose = 1 gives general status
+#verbose = 2 gived detailed functions
 verbose = 1
 
 #Create data structure from switches
@@ -167,7 +179,7 @@ fellowshipCuts = [
     [123052, 123796   ,0,0,0,0,[1,-1],"Gandalf flys away"],
     [123797, 132201   ,0,0,0,0,[0,0],"Rivendell, ends with Elrond telling story"],
     [132202, 133432   ,0,0,0,0,[0,0],"Sauron finger cut, Isildur says no"],#Shows sword cutting finger, but not much is seen.
-    [133433, 159637   ,0,0,0,0,[0,0],"Rivendell, fellowship trek"],#possibly scary Bilbo at 155175
+    [133433, 159637   ,0,0,0,0,[0,0],"Rivendell, fellowship trek"],#possibly scary Bilbo at 155175, 151969 is end of disk 1
     [159638, 164472   ,0,0,0,0,[0,0],"fellowship eating, practicing swords, ravens, hiking into the mountains"],
     [164473, 169391   ,0,0,0,0,[0,0],"Isengaurd fly through, mountain ice fall"],
     [169392, 176211   ,0,0,0,0,[0,0],"walk towards Moria, ends with its a tomb"],
@@ -398,7 +410,7 @@ returnofthekingCuts = [
     [273668,  275925  ,0,1,1,0,[0,0],"FS start fight with orcs"],
     [275926,  279360  ,0,0,0,0,[1,-1],"FS escape orcs"],#video transition cross dissolve example at 276295
     [279361,  284495  ,0,0,0,0,[0,0],"AGLG ride to gate, FS out of water, meet mouth of Sauron"],
-    [284496,  286753  ,0,0,0,0,[0,0],"Talk to Mouth about Frodo"],#might be scary, but somewhat important plot
+    [284496,  286753  ,0,0,0,0,[0,0],"Talk to Mouth about Frodo"],#might be scary, but somewhat important plot?
     [286754,  287075  ,1,1,0,0,[0,0],"Mouth head cut off, concludes negotiations"],
     [287076,  290441  ,0,0,0,0,[1,1],"FS avoiding eye, AGLG prepare for battle"],
     [290442,  290497  ,0,1,1,0,[0,0],"AGLG surrounded"],
@@ -419,6 +431,12 @@ returnofthekingCuts = [
     [347429,  378596  ,0,0,0,0,[0,0],"Credits"],
 ]
 
+#select film
+if inputMedia == 0:
+    print(" ---- Generating 1080p Extended Edition WITHOUT 2 disc intermission ----")
+elif inputMedia == 1:
+    print(" ---- Generating 1080p Extended Edition WITH 2 disc intermission ----")
+
 #select cuts from file switches
 if movieSelection == 0:
     selectedCuts = fellowshipCuts
@@ -430,9 +448,12 @@ else:
     selectedCuts = returnofthekingCuts
     print(" ---- Generating Return of the King cut ----")
 print(" ---- Warning: Console must be closed while script runs ----")
-#Functions used in this script
 
-#Move the edit point to the desired place
+################################
+#Functions used in this script
+################################
+
+#Move the edit point to the desired orientation
 def setEditPoint(newPoint):
     global editPointStatus
     verbose = 0
@@ -502,6 +523,23 @@ def addAudioTransition():
     keyboard.send('end')
     time.sleep(sleep_time)
 
+#lengthen a scene's frameCount, thus increasing each consecutive frame's count as well
+def lengthenScene(sceneIndex, stretchFrameCount):
+    global selectedCuts
+    for index,cuts in enumerate(selectedCuts):
+        if index == sceneIndex:
+            cuts[1] = cuts[1] + stretchFrameCount
+            if verbose:
+                print(f"scene lengthed: {sceneIndex}: {cuts[7]}")
+        elif index > sceneIndex:
+            cuts[0] = cuts[0] + stretchFrameCount
+            cuts[1] = cuts[1] + stretchFrameCount
+
+##################################
+#End functions used in this script
+##################################
+
+#TODO: make main statement, not sure how much it matters
 #Verify data structure
     #each item goes from frame A to at least frame A+1
     #ensure no frames missing, frames in order
@@ -525,13 +563,9 @@ for index,cuts in enumerate(selectedCuts):
         if cuts[1] != (next_item[0] - 1):
             print("Error! Cut \""+cuts[7]+"\" endFrame is not nextCut.startFrame - 1")
 
-#loop through data structure, adding clips
-    #“mediaPoolItem”
-    #“startFrame” (int)
-    #“endFrame” (int)
-    #(optional) “mediaType” (int; 1 - Video only, 2 - Audio only)
-    #media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0], "startFrame": 0, "endFrame": 10, "mediaType": 2}])
-
+#Update data structure for a desired version of the film
+if inputMedia == 1:
+    lengthenScene(45,167)
     
 #Populate source timeline
 #add video
@@ -552,7 +586,8 @@ for cuts in selectedCuts:
         newclip = media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
         if cuts[6][0] == 1:
             timecode = generated_timeline.GetCurrentTimecode()
-            print(f"start timecode: {timecode}")
+            if verbose:
+                print(f"start timecode: {timecode}")
             #TODO: fix problem where audio transition is not placing in the right spot
             #This is likely due to the playhead not staying at the end of the clip while
             #we switch timelines. For some reason END is not sending the playhead to the end
@@ -564,7 +599,8 @@ for cuts in selectedCuts:
         currentProject.SetCurrentTimeline(deleted_scenes_timeline)
         newclip = media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
         #print(newclip[0].GetProperty())
-        print("cut \""+cuts[7]+"\" removed at frame "+str(cuts[0]))
+        if verbose:
+            print("cut \""+cuts[7]+"\" removed at frame "+str(cuts[0]))
 #appends the first clip from root folder, frames 0 to 10, only audio.
 
 #TODO: print length of each timeline, total, and whether they match
