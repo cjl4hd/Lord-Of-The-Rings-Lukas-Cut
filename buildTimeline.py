@@ -47,6 +47,7 @@ root_folder = media_pool.GetRootFolder()
 #TODO detect existing timelines, if they exist, the generated timeline may fail
 media_pool.CreateEmptyTimeline('Source Timeline')
 source_timeline = currentProject.GetCurrentTimeline()
+#TODO consider using media_pool.CreateTimelineFromClips("Source Timeline", clip_list)
 
 media_pool.CreateEmptyTimeline('New Generated Timeline')
 generated_timeline = currentProject.GetCurrentTimeline()
@@ -58,7 +59,7 @@ deleted_scenes_timeline = currentProject.GetCurrentTimeline()
 clip_list = root_folder.GetClipList()
 
 #At this point in the code, we expect the media pool to look like the following:
-#media_pool[0] = input video
+#media_pool[0] = input video, if there are 2 discs, we'll add a second in here, everything else increments
 #media_pool[1] = input audio (optional)
 #media_pool[2] = source timeline
 #media_pool[3] = generated timeline
@@ -102,12 +103,12 @@ maxNasgul = 0
 #enable this if you want to add your own audio. Common if your version of LOTR is DTS. 
 #Two ways to get audio are 1) convert to stereo or 2) convert to PWM surround using shutter encoder (ffmpeg)
 #and bring the audio into your media pool. This option will pull the audio back into your cut
-audioRemux = 1
+audioRemux = 0
 
 #Input media version
 #0 = extended 1080p blu-ray, removed frames for intermission (single disk)
 #1 = extended 1080p blu-ray, 2 disk version
-inputMedia = 0
+inputMedia = 1
 
 ######################################################
 # NO NEED TO EDIT BEYOND HERE FOR BASIC CUT GENERATION
@@ -116,18 +117,23 @@ inputMedia = 0
 #Edit point status
 #used for tracking the state of the edit point
 #The edit point tells us whether a transition will be placed before, between, or after a cut
+#this should aways be initialized to 0
 editPointStatus = 0
 
 #verbose mode prints more info and debug
 #verbose = 1 gives general status
 #verbose = 2 gived detailed functions
-verbose = 1
+verbose = 2
+
+#Audio transitions help the film transition more naturally but are more error prone,
+#so we can turn them off if things aren't working or we're debugging
+audioTransitions = 1
 
 #Create data structure from switches
 #This is the key component to the build script. Each cut contains data for describing how child friendly it is.
 #From that, you can choose how much you want to remove from the final cut.
-#startFrame, endFrame, violence, scary, orcs, nasgul, notes
-#[0,1000,0-4,0-4,0-2,0-2,"string"]
+#startFrame, endFrame, violence, scary, orcs, nasgul, [transition, position], notes
+#[0,1000,0-4,0-4,0-2,0-2,[1,0],"string"]
 fellowshipCuts = [
     #                  Violence
     #                  | Scary
@@ -179,7 +185,8 @@ fellowshipCuts = [
     [123052, 123796   ,0,0,0,0,[1,-1],"Gandalf flys away"],
     [123797, 132201   ,0,0,0,0,[0,0],"Rivendell, ends with Elrond telling story"],
     [132202, 133432   ,0,0,0,0,[0,0],"Sauron finger cut, Isildur says no"],#Shows sword cutting finger, but not much is seen.
-    [133433, 159637   ,0,0,0,0,[0,0],"Rivendell, fellowship trek"],#possibly scary Bilbo at 155175, 151969 is end of disk 1
+    [133433, 151968   ,0,0,0,0,[0,0],"Rivendell discussion about ring"],#possibly scary Bilbo at 155175, 151969 is end of disk 1
+    [151969, 159637   ,0,0,0,0,[0,0],"Rivendell, fellowship trek"],#1st scene of 2nd disc
     [159638, 164472   ,0,0,0,0,[0,0],"fellowship eating, practicing swords, ravens, hiking into the mountains"],
     [164473, 169391   ,0,0,0,0,[0,0],"Isengaurd fly through, mountain ice fall"],
     [169392, 176211   ,0,0,0,0,[0,0],"walk towards Moria, ends with its a tomb"],
@@ -535,6 +542,21 @@ def lengthenScene(sceneIndex, stretchFrameCount):
             cuts[0] = cuts[0] + stretchFrameCount
             cuts[1] = cuts[1] + stretchFrameCount
 
+def timecodeToFrames(timecode, frame_rate):
+    """Converts a timecode string to frame count.
+
+    Args:
+        timecode: Timecode string in the format "HH:MM:SS:FF".
+        frame_rate: Frame rate of the timeline.
+
+    Returns:
+        The frame count as an integer.
+    """
+    hours, minutes, seconds, frames = map(int, timecode.split(':'))
+    total_seconds = (hours * 3600) + (minutes * 60) + seconds
+    frame_count = (total_seconds * frame_rate) + frames
+    return int(frame_count)
+
 ##################################
 #End functions used in this script
 ##################################
@@ -563,28 +585,68 @@ for index,cuts in enumerate(selectedCuts):
         if cuts[1] != (next_item[0] - 1):
             print("Error! Cut \""+cuts[7]+"\" endFrame is not nextCut.startFrame - 1")
 
+#define media indices TODO: This can probably be cleaner, maybe by name
+clipListCount = 1
+clipListCount = clipListCount + audioRemux #add one for audio clip
+clipListCount = clipListCount + (inputMedia == 1) #add one for 2 disk
+
 #Update data structure for a desired version of the film
 if inputMedia == 1:
     lengthenScene(45,167)
     
 #Populate source timeline
 #add video
+
 currentProject.SetCurrentTimeline(source_timeline)
-media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0], "recordFrame": 86400}])
+sourceTimelineAudioLength = 0
+sourceTimelineVideoLength = 0
+for i in range(clipListCount):
+    if verbose == 2:
+        print(f"clip list item {i}:")
+        print(clip_list[i].GetClipProperty(propertyName=None))
+    #check if item is audio or video
+    clipType = clip_list[i].GetClipProperty('Type')
+    # - int(clip_list[i].GetClipProperty('Start'))
+    #track length of audio and video separately to track position to append
+    if clipType == "Audio":
+        print("adding audio")
+        #get item length in frames
+        cliplength = timecodeToFrames(clip_list[i].GetClipProperty('End TC'), 24)
+        media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[i], "recordFrame": 86400+sourceTimelineAudioLength}])
+        sourceTimelineAudioLength = sourceTimelineAudioLength + cliplength
+    elif clipType == "Video":
+        print("adding video")
+        #get item length in frames
+        cliplength = int(clip_list[i].GetClipProperty('End'))
+        media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[i], "recordFrame": 86400+sourceTimelineVideoLength}])
+        sourceTimelineVideoLength = sourceTimelineVideoLength + cliplength
+    elif clipType == "Video + Audio":
+        print("adding video audio combo")
+        #get item length in frames
+        cliplength = int(clip_list[i].GetClipProperty('End'))
+        media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[i], "recordFrame": 86400+sourceTimelineVideoLength}])
+        sourceTimelineAudioLength = sourceTimelineAudioLength + cliplength
+        sourceTimelineVideoLength = sourceTimelineVideoLength + cliplength
+    
+#media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0], "recordFrame": 86400}])
+#media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[0]}])
 #if necessary, add audio
-if audioRemux == 1:
-    #for some reason the timeline starts at hr=1, so appending to the beginning means frame 86400
-    #in our case, we've set both the video and audio to recordFrame=0, that way the timeline frame numbers match the media pool frame numbers
-    media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[1], "recordFrame": 86400}])
-    #audiotrack = source_timeline.GetItemListInTrack("audio", 1)
-    #clip = audiotrack[0]
-    #clip.SetProperty("start", 0)
+#if audioRemux == 1:
+#    #for some reason the timeline starts at hr=1, so appending to the beginning means frame 86400
+#    #in our case, we've set both the video and audio to recordFrame=0, that way the timeline frame numbers match the media pool frame numbers
+#    #media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[1], "recordFrame": 86400}])
+#    media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[1]}])
+#    #audiotrack = source_timeline.GetItemListInTrack("audio", 1)
+#    #clip = audiotrack[0]
+#    #clip.SetProperty("start", 0)
+#if inputMedia == 1:
+#    media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2]}])
 
 for cuts in selectedCuts:
     if cuts[2] <= maxViolence and cuts[3] <= maxscary and cuts[4] <= maxOrcs and cuts[5] <= maxNasgul:
         currentProject.SetCurrentTimeline(generated_timeline)
         newclip = media_pool.AppendToTimeline([{"mediaPoolItem":clip_list[2], "startFrame": cuts[0], "endFrame": cuts[1]}])
-        if cuts[6][0] == 1:
+        if (cuts[6][0] == 1) and (audioTransitions == 1):
             timecode = generated_timeline.GetCurrentTimecode()
             if verbose:
                 print(f"start timecode: {timecode}")
