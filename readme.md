@@ -33,6 +33,8 @@ There are also helpful settings to tune for your use case that shouldn't impact 
 
 ### Errors in the flow
 Even when I run with H264 codec settings that look compatible, I get the following error "The clip could not be decoded correctly. Please check if the clip is still available on the drive." at the end of the encode process. My best guess is that the end of file is not how Davinci Resolve expects, and so throws an error. This doesn't seem to be a problem, as Davinci Resolve has already encoded the entire film to the file.
+
+For more details on encode settings and debugging h264, see https://github.com/cjl4hd/Lord-Of-The-Rings-Lukas-Cut/blob/main/resolvedecode.md
 ## Using your generated timeline
 Once you've generated your timeline, you can do whatever you want with it. You can make your own edits, add or remove more scenes, update the movie's color grading. Then you'll want to export the generated cut to a file, choosing your desired quality. More details on this can be found at the Davinci website:
 (https://www.blackmagicdesign.com/products/davinciresolve/training) and download "Delivering Content".
