@@ -1,22 +1,23 @@
 # Davinci Resolve Decode Support
-Davinci Resolve will occasionally have issues with h264 decoding. This covers an exploration of which encode settings are incompatible. 
+Davinci Resolve will occasionally have issues with h264 decoding. This covers an exploration of which encode settings are incompatible. In my experience, creating proxies and optimized media are not a problem, but once I start making cuts and try to render them, problems arise. My guess is that this is due to a specific h264 encode setting involving frame generation, and that DR is fine generating frames sequentually, but once it has to jump to a new point, it doesn't always know where to look to generate the frame. This exploration seeks to root-cause this issue in encode settings.
 ## Setup
-I am using Handbrake 1.9.2 (2025022300) and importing to DR 18.5 for this review. I chose 4 minutes of video (44:00 to 48:00 of Fellowship) to encode. I tuned the encoder level and profile. In DR I set "Stop playback when a dropped frame is detected." to TRUE. I made a series of short cuts, some being a few seconds, and others being less than a second, to test how DR handles the encoded frames.
+I am using Handbrake 1.9.2 (2025022300) and importing to DR 18.5 for this review. I chose 4 minutes of video (44:00 to 48:00 of Fellowship) to encode. I tuned the encoder level and profile. In DR I set "Stop playback when a dropped frame is detected." to TRUE and "Stop renders when a frame or clip cannot be processed" to TRUE. I made a series of short cuts, some being a few seconds, and others being less than a second, to test how DR handles the encoded frames. To test each profile, I used "Replace Selected Clip..." to keep the cuts the same across clips.
 
-| Encoder Profile | Encoder Level | Playback | Render |
+| Encoder Profile | Encoder Level | Playback no proxy (2237 total frames) | Render |
 | ---- | ---- | ---- | ---- |
 | Main | 4 | PASS | PASS |
-| Main | 4.1 | ---- | ---- |
-| High | 4 | ---- | ---- |
-| Main | 5 | ------- | ---- |
-| Main | 5.1 | ------- | ---- |
-| Main | 5.2 | ------- | ---- |
-| Main | 6 | ------- | ---- |
-| Main | 6.1 | ------- | ---- |
-| Main | 6.2 | FAIL | PASS |
+| Main | 4.1 | PASS | PASS |
+| High | 4   | PASS | PASS |
+| Main | 5   | FAIL at frame 909,1933, PASS try replay | PASS |
+| Main | 5.1 | FAIL at frame 1933, PASS on replay | PASS |
+| Main | 5.2 | FAIL at frame 907,1933, PASS on replay | PASS |
+| Main | 6   | FAIL at frame 907,1933, PASS on replay | PASS |
+| Main | 6.1 | PASS | PASS |
+| Main | 6.2 | FAIL at frame 1933, PASS on replay | PASS |
+| High | 6.2 | PASS | PASS |
 
 ### Profile Conclusions
-Using profiles without modified settings will consistently yield a working decode. Skipped frames in playback are likely due to my older laptop CPU. To determine the cause of my failed decode I'll have to dig deeper.
+Using profiles without modified settings will consistently yield a working decode. Skipped frames in playback are likely due to my older laptop CPU, and higher encoder levels require more CPU to decode. If it becomes too much for my CPU in real time, DR fails playback. To determine the cause of my failed decode I'll have to dig deeper.
 
 ## Media Info and Encode Settings
 I've reviewed two files that are the same video source, but with different encode settings. In reference to problematic settings, a Reddit source said: "reducing the bframes from 8 to 3, switching to closed gop. X264 keyint is also 250, I would have that as twice the keyint-min (46 or 48) as a test."
