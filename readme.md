@@ -58,6 +58,3 @@ Each category in the script has a definition to make the cut more objective on w
 ### How to use the rules
 When making a cut for yourself, you can choose the max value used to generate your timeline based on the descriptions above. This creates a movie talored to your child's age and comfort level, and allows the Lukas Cut to grow with your child.
 
-## FAQ
-### I'm getting an error when I try to export or deliver my video in Davinci Resolve
-I've had this problem when my media is a large file >20G over the network while running on a laptop. I'm not sure if the problem was SMB, bandwidth/latency, or laptop memory, but I used shutter encoder to encode a lower bit rate locally to my laptop and then use that as my source media with no problems. Please let me know if you find the source for this type of case.
